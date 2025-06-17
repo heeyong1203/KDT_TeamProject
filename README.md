@@ -24,31 +24,6 @@
 
 ---
 
-## 📦 프로젝트 클론 및 실행 방법
-
-아래 명령어를 통해 이 저장소를 로컬에 클론하고 작업을 시작할 수 있습니다.
-
-```bash
-# 저장소 클론
-git clone https://github.com/ABCchocolate/KDT_TeamProject.git
-
-# 저장소 디렉토리로 이동
-cd KDT_TeamProject
-````
----
-
-## 🛠️ Git 브랜치 전략 및 작업 가이드
-
-### 🔀 브랜치 생성 규칙
-
-작업은 반드시 각자의 브랜치에서 진행해주세요.
-브랜치 이름은 아래 예시처럼 작성합니다:
-
-```bash
-# 브랜치 생성 (예: 박유신 로그인 기능 작업 시)
-git checkout -b feature/login-yushin
-```
-
 **브랜치 이름 규칙 예시**
  __회의를 통해 변경될 수 있음__
 * `feature/기능명-이름` → 새 기능 개발
