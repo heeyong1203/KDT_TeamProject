@@ -3,19 +3,32 @@ package com.sinse.wms.common.view;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
+<<<<<<< HEAD
 import java.awt.Dimension;
+=======
+>>>>>>> efcca38 (현재까지 작업 내용 저장)
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import com.sinse.wms.common.Config;
 import com.sinse.wms.common.util.SideMenuHelper;
+<<<<<<< HEAD
 import com.sinse.wms.common.view.content.ExampleContentPage;
 import com.sinse.wms.common.view.content.ContentHeader;
 import com.sinse.wms.common.view.sidemenu.Menu;
 import com.sinse.wms.common.view.sidemenu.SideBar;
 import com.sinse.wms.common.view.sidemenu.SideMenuGroup;
 import com.sinse.wms.common.view.sidemenu.BaseSideMenu.SideMenuClickListener;
+=======
+import com.sinse.wms.common.view.content.ContentHeader;
+import com.sinse.wms.common.view.content.ExampleContentPage;
+import com.sinse.wms.common.view.content.InboundStatusPage;
+import com.sinse.wms.common.view.sidemenu.BaseSideMenu.SideMenuClickListener;
+import com.sinse.wms.common.view.sidemenu.Menu;
+import com.sinse.wms.common.view.sidemenu.SideBar;
+import com.sinse.wms.common.view.sidemenu.SideMenuGroup;
+>>>>>>> efcca38 (현재까지 작업 내용 저장)
 import com.sinse.wms.common.view.toolbar.ToolBar;
 import com.sinse.wms.common.view.toolbar.ToolBar.ToolBarListener;
 
@@ -85,7 +98,7 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 		this.cardLayout = new CardLayout();
 		this.bodyContent = new JPanel(cardLayout);
 		this.bodyContent.add(new ExampleContentPage(Color.WHITE), Menu.MAIN.name());
-		this.bodyContent.add(new ExampleContentPage(Color.BLACK), Menu.IN_BOUND_STATUS.name());
+		this.bodyContent.add(new InboundStatusPage(Color.RED), Menu.IN_BOUND_STATUS.name());
 		this.bodyContent.add(new ExampleContentPage(Color.LIGHT_GRAY), Menu.IN_BOUND_REQUEST.name());
 		this.bodyContent.add(new ExampleContentPage(Color.PINK), Menu.IN_BOUND_INSPECTION.name());
 		this.bodyContent.add(new ExampleContentPage(Color.GRAY), Menu.OUT_BOUND_STATUS.name());
