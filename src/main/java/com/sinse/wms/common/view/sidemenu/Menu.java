@@ -14,6 +14,7 @@ package com.sinse.wms.common.view.sidemenu;
  * 	<li>OUT_BOUND_INSPECTION - 출고 검수</li>
  * 	<li>INVENTORY_STATUS - 재고 상태</li>
  * 	<li>STATISTICS - 통계</li>
+ * 	<li>REPORT - 보고서</li>
  * 	<li>USER_MANAGEMENT- 사용자 관리</li>
  * </ul>
  */
@@ -27,6 +28,7 @@ public enum Menu {
 	OUT_BOUND_INSPECTION,
 	INVENTORY_STATUS,
 	STATISTICS,
+	REPORT,
 	USER_MANAGEMENT,
 	ADD_REQUEST,
 }
