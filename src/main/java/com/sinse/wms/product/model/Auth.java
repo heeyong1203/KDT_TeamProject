@@ -3,7 +3,8 @@ package com.sinse.wms.product.model;
 public class Auth {
 	private int auth_id;
 	private String auth_name;
-	private int auth_flag;
+	private boolean auth_flag;
+
 	public int getAuth_id() {
 		return auth_id;
 	}
@@ -16,10 +17,10 @@ public class Auth {
 	public void setAuth_name(String auth_name) {
 		this.auth_name = auth_name;
 	}
-	public int getAuth_flag() {
+	public boolean isAuth_flag() {
 		return auth_flag;
 	}
-	public void setAuth_flag(int auth_flag) {
+	public void setAuth_flag(boolean auth_flag) {
 		this.auth_flag = auth_flag;
 	}
 }

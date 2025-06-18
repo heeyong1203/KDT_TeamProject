@@ -3,6 +3,7 @@ package com.sinse.wms.product.model;
 public class ProductUnit {
 		private int unit_id;
 		private String unit_name;
+		
 		public int getUnit_id() {
 			return unit_id;
 		}

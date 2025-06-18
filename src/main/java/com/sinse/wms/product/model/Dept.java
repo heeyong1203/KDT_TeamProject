@@ -3,6 +3,7 @@ package com.sinse.wms.product.model;
 public class Dept {
 	private int dept_id;
 	private String dept_name;
+	
 	public int getDept_id() {
 		return dept_id;
 	}
@@ -15,5 +16,4 @@ public class Dept {
 	public void setDept_name(String dept_name) {
 		this.dept_name = dept_name;
 	}
-	
-}	
+}

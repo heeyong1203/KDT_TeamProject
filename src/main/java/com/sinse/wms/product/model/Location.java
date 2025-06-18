@@ -4,7 +4,6 @@ public class Location {
 	private int location_id;
 	private String location_name;
 	
-	
 	public int getLocation_id() {
 		return location_id;
 	}
@@ -17,7 +16,4 @@ public class Location {
 	public void setLocation_name(String location_name) {
 		this.location_name = location_name;
 	}
-	
-	
-	
 }
