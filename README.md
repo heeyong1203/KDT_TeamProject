@@ -1,4 +1,4 @@
-# 🧑‍💻 Team Project Repository
+ 🧑‍💻 Team Project Repository
 
 쿠팡 물류 시스템을 참고하여 구현된 입출고 및 재고 관리 시스템입니다.
 실시간 재고 현황 확인 및 입출고 처리, 회원 관리, 관리자 기능 등을 제공합니다.
@@ -20,7 +20,12 @@
 | 🔵 **Read (조회)**   | - 전체 상품 목록 기본 조회<br>- 기간 필터 설정 시 특정 기간 상품만 조회 가능                                          |
 | 🟡 **Update (수정)** | - 테이블 내 항목 **더블 클릭** 시 인라인 수정 가능                                                          |
 | 🔴 **Delete (삭제)** | - 항목 옆 **체크박스 선택 후** `삭제하기` 버튼 클릭 시 선택된 항목 삭제<br>- 실제 DB에서 해당 데이터 제거                      |
+
 ## 🔗 주요 문서 및 리소스
+
+* [기능 명세서 (Google Sheets)](https://docs.google.com/spreadsheets/d/1pF0cIQK2LSbPeYABY3mhK0nC8XCoxQBW_9Y3eXQ6NKw/edit?gid=0)
+* [ERD 설계 (ERDCloud)](https://www.erdcloud.com/d/FheQD6ZjBRMBAimFa)
+* [Figma 화면 설계](https://www.figma.com/design/aQ738p2Q739CYoJhDcSuTa/WMS?node-id=0-1&p=f&t=nu1y0gTUd4ycMIee-0)
 
 * [기능 명세서 (Google Sheets)](https://docs.google.com/spreadsheets/d/1pF0cIQK2LSbPeYABY3mhK0nC8XCoxQBW_9Y3eXQ6NKw/edit?gid=0)
 * [ERD 설계 (ERDCloud)](https://www.erdcloud.com/d/FheQD6ZjBRMBAimFa)
