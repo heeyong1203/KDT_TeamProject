@@ -18,6 +18,7 @@ import com.sinse.wms.common.view.sidemenu.SideMenuGroup;
 import com.sinse.wms.common.view.sidemenu.BaseSideMenu.SideMenuClickListener;
 import com.sinse.wms.common.view.toolbar.ToolBar;
 import com.sinse.wms.common.view.toolbar.ToolBar.ToolBarListener;
+import com.sinse.wms.statistic.view.StatisticPage;
 
 public class Main extends JFrame implements SideMenuClickListener, ToolBarListener {
 	private ToolBar toolbar;
@@ -92,7 +93,8 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 		this.bodyContent.add(new ExampleContentPage(Color.MAGENTA), Menu.OUT_BOUND_REQUEST.name());
 		this.bodyContent.add(new ExampleContentPage(Color.BLUE), Menu.OUT_BOUND_INSPECTION.name());
 		this.bodyContent.add(new ExampleContentPage(Color.YELLOW), Menu.INVENTORY_STATUS.name());
-		this.bodyContent.add(new ExampleContentPage(Color.ORANGE), Menu.STATISTICS.name());
+//		this.bodyContent.add(new ExampleContentPage(Color.ORANGE), Menu.STATISTICS.name());
+		this.bodyContent.add(new StatisticPage(Color.WHITE), Menu.STATISTICS.name());
 		this.bodyContent.add(new ExampleContentPage(Color.CYAN), Menu.USER_MANAGEMENT.name());
 	}
 
