@@ -3,7 +3,6 @@ package com.sinse.wms.inbound.view;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-<<<<<<< HEAD
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
