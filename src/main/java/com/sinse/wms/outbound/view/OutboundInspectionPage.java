@@ -18,13 +18,15 @@ public class OutboundInspectionPage extends BaseContentPage {
 
         p_wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 7));
         p_wrapper.setPreferredSize(new Dimension(870, 80));
-        p_wrapper.setBackground(Color.yellow);
+        p_wrapper.setOpaque(false);
 
+        // 라벨 및 JComboBox 사이즈 지정
         Dimension labelSize = new Dimension(80, 30);
         Dimension comboSize = new Dimension(230, 30);
         Dimension comboSize2 = new Dimension(150, 30);
 
-        filters = new LabeledComboBox[] {
+        // 라벨 및 JComboBox 묶음 지정
+        filters = new LabeledComboBox[] { // new String[]{} 대신 데이터 배열 넣어주시면 될 것 같습니다.
             new LabeledComboBox("거래처", new String[]{"A사", "B사", "C사"}, labelSize, comboSize),
             new LabeledComboBox("부서명", new String[]{"영업1팀", "영업2팀", "마케팅1팀", "마케팅2팀"}, labelSize, comboSize2),
             new LabeledComboBox("사원명", new String[]{"이경규", "김국진", "강호동", "유재석", "전현무", "장도연"}, labelSize, comboSize2),
