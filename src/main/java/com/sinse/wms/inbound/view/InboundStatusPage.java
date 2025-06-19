@@ -3,91 +3,42 @@ package com.sinse.wms.inbound.view;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.ArrayList;
-import java.util.List;
 
-import javax.swing.JOptionPane;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-import com.sinse.wms.common.Config;
-import com.sinse.wms.common.util.ExcelFileExport;
-import com.sinse.wms.common.util.GetSaveFilePath;
-import com.sinse.wms.common.view.button.OutLineButton;
 import com.sinse.wms.common.view.content.BaseContentPage;
-import com.sinse.wms.io.delete.IoDeleteController;
-import com.sinse.wms.io.util.IoSelectController;
-import com.sinse.wms.io.view.IoFilterPanel;
-import com.sinse.wms.product.model.IoRequest;
+import com.sinse.wms.common.view.content.LabeledComboBox;
 
 public class InboundStatusPage extends BaseContentPage {
-	private String ioRequestType = "입고";
-	private String status_type = "현황";
+    JPanel p_wrapper;
+    LabeledComboBox[] filters;
 
-	private IoFilterPanel filterPanel;
-	private OutLineButton bt_load, bt_delete, bt_export;
+    public InboundStatusPage(Color color) {
+        // ... 기본 스타일 설정 ...
 
-	public InboundStatusPage(Color color) {
-		setLayout(new FlowLayout(FlowLayout.CENTER, 0, 30)); // 레이아웃 스타일 설정
+        p_wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 7));
+        p_wrapper.setPreferredSize(new Dimension(870, 80));
+        p_wrapper.setOpaque(false);
 
-		List<IoRequest> emptyData = new ArrayList<>();
-		filterPanel = new IoFilterPanel(emptyData, status_type); // 콤보박스와 테이블을 합친 레이아웃 클래스
-		add(filterPanel); // 화면에 부착
-		add(createButtons()); // 버튼 부착
+        // 라벨 및 JComboBox 사이즈 지정
+        Dimension labelSize = new Dimension(80, 30);
+        Dimension comboSize = new Dimension(230, 30);
+        Dimension comboSize2 = new Dimension(150, 30);
 
-		// 조회(select) 이벤트 구현
-		bt_load.addActionListener(e -> {
-			new IoSelectController(filterPanel, ioRequestType, status_type);
-		});
+        // 라벨 및 JComboBox 묶음 지정
+        filters = new LabeledComboBox[] { // new String[]{} 대신 데이터 배열 넣어주시면 될 것 같습니다.
+            new LabeledComboBox("거래처", new String[]{"A사", "B사", "C사"}, labelSize, comboSize),
+            new LabeledComboBox("부서명", new String[]{"영업1팀", "영업2팀", "마케팅1팀", "마케팅2팀"}, labelSize, comboSize2),
+            new LabeledComboBox("사원명", new String[]{"이경규", "김국진", "강호동", "유재석", "전현무", "장도연"}, labelSize, comboSize2),
+            new LabeledComboBox("품목코드", new String[]{"ST-20001", "ST-20002", "ST-20003", "ST-20004", "ST-20005", "ST-20006"}, labelSize, comboSize),
+            new LabeledComboBox("품목명", new String[]{"A4 복사용지 80g", "3단 서류함", "유성 네임펜", "고무줄 500g"}, labelSize, comboSize2),
+            new LabeledComboBox("진행상태", new String[]{"요청", "대기", "승인", "반려"}, labelSize, comboSize2)
+        };
 
-		// 삭제(delete) 이벤트 구현
-		bt_delete.addMouseListener(new MouseAdapter() {
-			public void mouseReleased(MouseEvent e) {
-				int result = JOptionPane.showConfirmDialog(null, "정말 삭제하시겠습니까?", "삭제 확인", JOptionPane.YES_NO_OPTION);
+        for (LabeledComboBox filter : filters) {
+            p_wrapper.add(filter);
+        }
 
-				if (result == JOptionPane.YES_OPTION) {
-					new IoDeleteController(filterPanel).delete();
-				}
-			}
-		});
-
-		// 내보내기(export) 이벤트 구현
-		bt_export.addMouseListener(new MouseAdapter() {
-			public void mouseReleased(MouseEvent e) {
-				String path = GetSaveFilePath.saveFilePath();
-				List<String> columns = new ArrayList<>();
-				for (int i = 0; i < filterPanel.getIoTableModel().getColumnCount(); i++) {
-					columns.add(filterPanel.getIoTableModel().getColumnName(i));
-				}
-				String msg = ExcelFileExport.exportToExcel(columns, filterPanel.getIoTableModel(), path);
-				JOptionPane.showMessageDialog(null, msg);
-			}
-		});
-	}
-
-	/*------------------------------------------------
-	  버튼 생성 함수
-	------------------------------------------------*/
-	private JPanel createButtons() {
-
-		JPanel p_bt = new JPanel();
-		p_bt.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 0));
-		p_bt.setPreferredSize(new Dimension(Config.CONTENT_BODY_WIDTH - 110, 35));
-		p_bt.setOpaque(false);
-
-		bt_load = new OutLineButton("조회", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
-		bt_delete = new OutLineButton("삭제", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
-		bt_export = new OutLineButton("내보내기", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
-
-		p_bt.add(bt_load); // 버튼 붙이기
-		p_bt.add(bt_delete);
-		p_bt.add(bt_export);
-
-		add(p_bt);
-
-		return p_bt;
-	}
+        add(p_wrapper);
+    }
 }
