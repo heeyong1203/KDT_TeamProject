@@ -49,7 +49,13 @@ public class Config {
 	public static final Color TOP_MENU_UNSELECT_FONT_COLOR = new Color(138, 138, 138);
 	
 	public static final String APP_DEFAULT_FONT = "Dialog";
-
+	
+	
+	
+	//DATABASE CONFIG
+	public static final String URL = "jdbc:mysql://158.247.242.82:3306/sinse_wms";
+	public static final String USER = "sinse3";
+	public static final String PWD = "sinse3!@#";
 	
 	
 	
