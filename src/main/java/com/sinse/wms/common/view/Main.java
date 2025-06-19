@@ -11,20 +11,20 @@ import com.sinse.wms.common.Config;
 import com.sinse.wms.common.util.SideMenuHelper;
 import com.sinse.wms.common.view.content.ContentHeader;
 import com.sinse.wms.common.view.content.ExampleContentPage;
-import com.sinse.wms.common.view.content.InboundStatusPage;
 import com.sinse.wms.common.view.sidemenu.BaseSideMenu.SideMenuClickListener;
 import com.sinse.wms.common.view.sidemenu.Menu;
 import com.sinse.wms.common.view.sidemenu.SideBar;
 import com.sinse.wms.common.view.sidemenu.SideMenuGroup;
 import com.sinse.wms.common.view.toolbar.ToolBar;
 import com.sinse.wms.common.view.toolbar.ToolBar.ToolBarListener;
+import com.sinse.wms.statistic.view.StatisticPage;
 import com.sinse.wms.inbound.view.InboundInspectionPage;
 import com.sinse.wms.inbound.view.InboundRequestPage;
+import com.sinse.wms.inbound.view.InboundStatusPage;
 import com.sinse.wms.inventory.view.InventoryStatusPage;
 import com.sinse.wms.outbound.view.OutboundInspectionPage;
 import com.sinse.wms.outbound.view.OutboundRequestPage;
 import com.sinse.wms.outbound.view.OutboundStatusPage;
-import com.sinse.wms.statistic.view.StatisticPage;
 
 public class Main extends JFrame implements SideMenuClickListener, ToolBarListener {
 	private ToolBar toolbar;
