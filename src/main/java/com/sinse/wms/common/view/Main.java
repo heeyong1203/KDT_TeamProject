@@ -3,43 +3,17 @@ package com.sinse.wms.common.view;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-import java.awt.Dimension;
-=======
->>>>>>> efcca38 (현재까지 작업 내용 저장)
->>>>>>> 8fcb24f (현재까지 작업 내용 저장)
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.sinse.wms.common.Config;
 import com.sinse.wms.common.util.SideMenuHelper;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-import com.sinse.wms.common.view.content.ExampleContentPage;
->>>>>>> 8fcb24f (현재까지 작업 내용 저장)
 import com.sinse.wms.common.view.content.ContentHeader;
 import com.sinse.wms.common.view.sidemenu.BaseSideMenu.SideMenuClickListener;
 import com.sinse.wms.common.view.sidemenu.Menu;
 import com.sinse.wms.common.view.sidemenu.SideBar;
 import com.sinse.wms.common.view.sidemenu.SideMenuGroup;
-<<<<<<< HEAD
-=======
-import com.sinse.wms.common.view.sidemenu.BaseSideMenu.SideMenuClickListener;
-=======
-import com.sinse.wms.common.view.content.ContentHeader;
-import com.sinse.wms.common.view.content.ExampleContentPage;
-import com.sinse.wms.common.view.content.InboundStatusPage;
-import com.sinse.wms.common.view.sidemenu.BaseSideMenu.SideMenuClickListener;
-import com.sinse.wms.common.view.sidemenu.Menu;
-import com.sinse.wms.common.view.sidemenu.SideBar;
-import com.sinse.wms.common.view.sidemenu.SideMenuGroup;
->>>>>>> efcca38 (현재까지 작업 내용 저장)
->>>>>>> 8fcb24f (현재까지 작업 내용 저장)
 import com.sinse.wms.common.view.toolbar.ToolBar;
 import com.sinse.wms.common.view.toolbar.ToolBar.ToolBarListener;
 import com.sinse.wms.statistic.view.StatisticPage;
@@ -58,14 +32,6 @@ import com.sinse.wms.outbound.view.OutboundRequestPage;
 import com.sinse.wms.outbound.view.OutboundStatusPage;
 import com.sinse.wms.product.model.Member;
 import com.sinse.wms.report.view.ReportPage;
-import com.sinse.wms.statistic.view.StatisticPage;
-import com.sinse.wms.inbound.view.InboundInspectionPage;
-import com.sinse.wms.inbound.view.InboundRequestPage;
-import com.sinse.wms.inbound.view.InboundStatusPage;
-import com.sinse.wms.inventory.view.InventoryStatusPage;
-import com.sinse.wms.outbound.view.OutboundInspectionPage;
-import com.sinse.wms.outbound.view.OutboundRequestPage;
-import com.sinse.wms.outbound.view.OutboundStatusPage;
 
 public class Main extends JFrame implements SideMenuClickListener, ToolBarListener {
     private ToolBar toolbar;
@@ -139,7 +105,6 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 	private void initContents() {
 		this.cardLayout = new CardLayout();
 		this.bodyContent = new JPanel(cardLayout);
-<<<<<<< HEAD
 		this.bodyContent.add(new MainPage(Color.WHITE,m), Menu.MAIN.name());
 		this.bodyContent.add(new InboundStatusPage(Color.RED), Menu.IN_BOUND_STATUS.name());
 		this.bodyContent.add(new InboundRequestPage(Color.LIGHT_GRAY), Menu.IN_BOUND_REQUEST.name());
