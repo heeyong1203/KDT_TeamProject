@@ -15,7 +15,7 @@ import com.sinse.wms.common.Config;
  * 실질 적인 화면 단위 클래스 화면을 추가하려면 이 클래스를 상속 받아서 화면을 만들면 된다.
  * {@code public }
  */
-abstract class BaseContentPage extends JPanel {
+public abstract class BaseContentPage extends JPanel {
 	protected Color backgoundColor = Color.WHITE;	
 	
 	public BaseContentPage() {

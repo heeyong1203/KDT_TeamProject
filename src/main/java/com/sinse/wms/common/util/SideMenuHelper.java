@@ -41,6 +41,7 @@ public class SideMenuHelper {
 			topMenuName = "통계 및 보고서";
 			imageName = "graph_icon.png";
 			subMenus.add(new SideSubMenu(Menu.STATISTICS, "통계", listener));
+			subMenus.add(new SideSubMenu(Menu.REPORT, "보고서", listener));
 			break;
 
 		case USER_MANAGEMENT:
