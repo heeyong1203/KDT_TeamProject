@@ -47,10 +47,10 @@ public class IoRequest {
 	public void setLocation(Location location) {
 		this.location = location;
 	}
-	public int getRequest_member_id() {
+	public Member getRequest_member_id() {
 		return request_member_id;
 	}
-	public void setRequest_member_id(int request_member_id) {
+	public void setRequest_member_id(Member request_member_id) {
 		this.request_member_id = request_member_id;
 	}
 	public String getRequest_reason() {

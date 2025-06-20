@@ -2,15 +2,23 @@ package com.sinse.wms.login.view;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JSeparator;
 import javax.swing.JTextField;
+
+import com.sinse.wms.product.model.Member;
+import com.sinse.wms.product.repository.MemberDAO;
 
 public class LoginLayout extends JFrame {
 
@@ -24,6 +32,12 @@ public class LoginLayout extends JFrame {
 	JLabel la_find_pw;
 	JButton bt_login;
 	JSeparator la_seperator;
+
+	AuthIDFrame authIDFrame;
+	AuthPwdFrame authPwdFrame;
+	
+	String id;
+	String pwd;
 
 	public LoginLayout() {
 		// 프레임 설정
@@ -94,24 +108,77 @@ public class LoginLayout extends JFrame {
 		// 배경색 설정
 		getContentPane().setBackground(new Color(245, 247, 252));
 		setVisible(true);
+
+		id = null;
+		pwd = null;
+
+		// ==================Action 추가================
+		bt_login.addActionListener((e) -> {
+			id = t_id.getText();
+			pwd = new String(t_pwd.getPassword());
+			if (id == null) {
+				JOptionPane.showMessageDialog(this, "아이디를 입력해주세요.");
+			} else if (pwd == null) {
+				JOptionPane.showMessageDialog(this, "비밀번호를 입력해주세요.");
+			} else {
+				check();
+			}
+		});
+		
+		la_find_id.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				authIDFrame = new AuthIDFrame();
+			}
+		});
+		la_find_pw.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				authPwdFrame = new AuthPwdFrame();
+			}
+		});
+
+		// 프레임 상에서 ente를 누를 시 로그인 시도
+		this.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					id = t_id.getText();
+					pwd = new String(t_pwd.getPassword());
+
+					if (id == null || id.trim().isEmpty()) {
+						JOptionPane.showMessageDialog(LoginLayout.this, "아이디를 입력해주세요.");
+					} else if (pwd == null || pwd.trim().isEmpty()) {
+						JOptionPane.showMessageDialog(LoginLayout.this, "비밀번호를 입력해주세요.");
+					} else {
+						check(); // 로그인 시도
+					}
+				}
+			}
+		});
+
 	}
 
 	public void check() {
-		String ID = t_id.getText();
-		String pwd = new String(t_pwd.getPassword());
+		id = t_id.getText();
 
-		// 로그인 로직 실행
-		// login();
+		pwd = new String(t_pwd.getPassword());
 
-		// 로그인 성공 시
-		// if (login == true) {
-    	     // 메인 애플리케이션 화면(AppMain) 실행
-		// } else {
-    	     // 로그인 실패: 경고창 표시
-    	     // JOptionPane.showMessageDialog(...);
-		// }
+		MemberDAO dao = new MemberDAO();
+		Member m = dao.selectToLogin(id, pwd);
 
+		if (m != null) {
+			JOptionPane.showMessageDialog(this, m.getMember_name() + "님 환영합니다!");
+			this.dispose(); // 로그인 창 닫기
+
+			// 여기서 App.main() 실행!
+			com.sinse.wms.App.main(null);
+		} else {
+			JOptionPane.showMessageDialog(this, "로그인 실패!");
+		}
 	}
+
+
 
 	public static void main(String[] args) {
 		new LoginLayout();
