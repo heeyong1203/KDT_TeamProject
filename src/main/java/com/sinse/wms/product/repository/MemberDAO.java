@@ -1,3 +1,4 @@
+
 package com.sinse.wms.product.repository;
 
 import java.sql.Connection;
@@ -14,6 +15,50 @@ import com.sinse.wms.product.model.Member;
 
 public class MemberDAO {
 	DBManager dbManager = DBManager.getInstance();
+
+	
+	//로그인 기능 구현을 위한 특정 회원 조회
+	//조건 : member_email 와 memeber_Pwd가 같은 회원
+	public Member selectToLogin(String id, String pwd) {
+	    Connection con = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    Member m = null;
+
+	    con = dbManager.getConnetion();
+
+	    try {
+	        String sql = "SELECT * FROM member WHERE member_email = ? AND member_password = ?";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setString(1, id);
+	        pstmt.setString(2, pwd);
+	        rs = pstmt.executeQuery();
+
+	        if (rs.next()) {
+	            m = new Member();
+	            m.setMember_id(rs.getInt("member_id"));
+	            m.setMember_email(rs.getString("member_email"));
+	            m.setMember_password(rs.getString("member_password"));
+	            m.setMember_name(rs.getString("member_name"));
+	            m.setMemberhiredate(rs.getDate("member_hiredate"));
+
+	            Dept d = new Dept();
+	            d.setDept_id(rs.getInt("dept_id"));
+	            m.setDept(d);
+
+	            Auth a = new Auth();
+	            a.setAuth_id(rs.getInt("auth_id"));
+	            m.setAuth(a);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        dbManager.release(pstmt, rs);
+	    }
+
+	    return m;
+	}
+	
 
 	// 전체 회원 조회
 	public List<Member> selectAll() {

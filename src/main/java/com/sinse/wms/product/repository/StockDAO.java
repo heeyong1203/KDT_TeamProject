@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.sinse.wms.common.util.DBManager;
 import com.sinse.wms.product.model.Location;
@@ -55,6 +57,45 @@ public class StockDAO {
 		return list;
 	}
 
+	//상품별 총합계 테이블 조회
+	public List<Stock> selectProductQuantity(){
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<Stock> list = new ArrayList<>();
+		
+		con = dbManager.getConnetion();
+		
+		try {
+			StringBuffer sql = new StringBuffer();
+			sql.append("SELECT p.product_id, p.product_name, p.product_code, p.product_stock, SUM(s.stock_quantity) as total"
+					+ " FROM product p LEFT JOIN stock s ON p.product_id=s.product_id"
+					+ " GROUP BY p.product_id, p.product_name, p.product_stock");
+			pstmt = con.prepareStatement(sql.toString());
+			rs = pstmt.executeQuery();
+			while(rs.next()) {
+				Stock stock = new Stock();
+				Product product = new Product();
+				
+				stock.setStock_quantity(rs.getInt("total"));
+				
+				product.setProduct_id(rs.getInt("p.product_id"));
+				product.setProduct_name(rs.getString("p.product_name"));
+				product.setProduct_code(rs.getString("p.product_code"));
+				product.setProduct_stock(rs.getInt("p.product_stock"));
+				stock.setProduct(product);
+				
+				list.add(stock);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			dbManager.release(pstmt, rs);
+		}
+		return list;
+	}
+	
 	// 재고 추가
 	public void insert(Stock stock) {
 		Connection con = null;
