@@ -22,6 +22,7 @@ import com.sinse.wms.inbound.view.InboundInspectionPage;
 import com.sinse.wms.inbound.view.InboundRequestPage;
 import com.sinse.wms.inbound.view.InboundStatusPage;
 import com.sinse.wms.inventory.view.InventoryStatusPage;
+import com.sinse.wms.membermanagement.view.MemberManagementPage;
 import com.sinse.wms.outbound.view.OutboundInspectionPage;
 import com.sinse.wms.outbound.view.OutboundRequestPage;
 import com.sinse.wms.outbound.view.OutboundStatusPage;
@@ -101,7 +102,7 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 		this.bodyContent.add(new InventoryStatusPage(Color.YELLOW), Menu.INVENTORY_STATUS.name());
 //		this.bodyContent.add(new ExampleContentPage(Color.ORANGE), Menu.STATISTICS.name());
 		this.bodyContent.add(new StatisticPage(Color.WHITE), Menu.STATISTICS.name());
-		this.bodyContent.add(new ExampleContentPage(Color.CYAN), Menu.USER_MANAGEMENT.name());
+		this.bodyContent.add(new MemberManagementPage(), Menu.USER_MANAGEMENT.name());
 	}
 
 	/**
