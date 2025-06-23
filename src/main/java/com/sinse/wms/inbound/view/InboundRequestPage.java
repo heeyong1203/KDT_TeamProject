@@ -114,7 +114,7 @@ public class InboundRequestPage extends BaseContentPage {
         rawData = dao.selectByFilter(io_request_type, status_name, IoFilterHelper.getFilterValues(filters)); 
         
         // 새로운 테이블 모델 생성
-    	tableModel = IoViewHelper.toTableModel(rawData, Config.TABLE_COLUMNS); // 테이블 모델
+    	tableModel = IoViewHelper.toTableModel(rawData, Config.TABLE_COLUMNS, status_name, true); // 테이블 모델
     	Object[] emptyRow = new Object[tableModel.getColumnCount()]; // 0번째 입력행
         
         // 기존 테이블에서 새 모델로 변경
