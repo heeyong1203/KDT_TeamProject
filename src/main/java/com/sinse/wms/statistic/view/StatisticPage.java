@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
@@ -12,9 +14,13 @@ import javax.swing.JTabbedPane;
 import javax.swing.border.Border;
 
 import com.sinse.wms.common.Config;
-import com.sinse.wms.common.view.content.ExampleContentPage;
+import com.sinse.wms.common.view.content.BaseContentPage;
+import com.sinse.wms.product.model.IoRequest;
+import com.sinse.wms.product.model.Stock;
+import com.sinse.wms.product.repository.IoRequestDAO;
+import com.sinse.wms.product.repository.StockDAO;
 
-public class StatisticPage extends ExampleContentPage{
+public class StatisticPage extends BaseContentPage{
 	//크게 3개 구역으로 지정
 	JPanel p_top;
 	JPanel p_center;
@@ -27,6 +33,10 @@ public class StatisticPage extends ExampleContentPage{
 	JPanel p_outbound;
 	JPanel p_inventory;
 	
+	BarChart inboundBarChart;
+	BarChart outboundBarChart;
+	BarChart2 stockBarChart;
+	
 	JPanel p_toplist1;
 	JPanel p_toplist2;
 	JLabel la_titleIn;
@@ -34,17 +44,25 @@ public class StatisticPage extends ExampleContentPage{
 	JLabel la_titleOut;
 	JLabel la_resultOut;
 	
-	//두번째 레이아웃에 들어갈 항목(p_center)
-	JPanel p_total;
+	CircleChart circleChart1;
 	
 	//세번째 레이아웃에 들어갈 항목
 	JPanel p_category1;
 	JPanel p_category2;
 	
-	public StatisticPage(Color color) {
-		super(color);
+	HorizentalBarChart hBarChart;
+	
+	//DAO
+	StockDAO stockDAO;
+	IoRequestDAO ioRequestDAO;
+	
+	public StatisticPage() {
 		
 		/*생성----------------------------------------------------------------------------*/
+		//DAO
+		stockDAO = new StockDAO();
+		ioRequestDAO = new IoRequestDAO();
+		
 		//최상위 레이아웃
 		p_top = new JPanel();
 		p_center = new JPanel();
@@ -55,24 +73,54 @@ public class StatisticPage extends ExampleContentPage{
 		p_inbound = new JPanel();
 		p_outbound = new JPanel();
 		p_inventory = new JPanel();
+		
+		//그래프
+		inboundBarChart = new BarChart("기간별 총 입고 현황", ioRequestDAO.selectDailyIobound("입고"), ioRequestDAO.selectWeekIobound("입고"), ioRequestDAO.selectMonthIobound("입고"));		//입고량
+		outboundBarChart = new BarChart("기간별 총 출고 현황", ioRequestDAO.selectDailyIobound("출고"), ioRequestDAO.selectWeekIobound("출고"), ioRequestDAO.selectMonthIobound("출고"));		//출고량
+		
+		List<Map<String,Integer>> stockList = stockDAO.selectTotalStockByCategory();
+		stockBarChart = new BarChart2("카테고리별 재고 현황", stockList);		//재고량
+		
+		List<Stock> invenList = stockDAO.selectTotalStockByLocation();
+		hBarChart = new HorizentalBarChart("재고 창고 포화도", invenList);
+		
+		//top 리스트
+		//입고 top list
+		List<IoRequest> inboundToplist = ioRequestDAO.selectInOutTop5("입고");
+		String inboundLabelString = "<html>";
+		for(int i=0; i<inboundToplist.size(); i++) {
+			IoRequest io = inboundToplist.get(i);
+			inboundLabelString += (i+1)+ ". " + io.getProduct().getProduct_name() + "&nbsp;" + io.getQuantity() + "<br>";
+		}
+		inboundLabelString += "</html>";
+		
+		//출고 top list
+		List<IoRequest> outboundToplist = ioRequestDAO.selectInOutTop5("출고");
+		String outboundLabelString = "<html>";
+		for(int i=0; i<outboundToplist.size(); i++) {
+			IoRequest io = outboundToplist.get(i);
+			outboundLabelString += (i+1)+ ". " + io.getProduct().getProduct_name() + "&nbsp;" + io.getQuantity() + "<br>";
+		}
+		outboundLabelString += "</html>";
+		
 		p_toplist1 = new JPanel();
 		la_titleIn = new JLabel("Top 5");
-		la_resultIn = new JLabel("<html>1. Null <br>2. Null<br>3. Null<br>4. Null<br>5. Null<br></html>");
+		la_resultIn = new JLabel(inboundLabelString);
 		p_toplist2 = new JPanel();
 		la_titleOut = new JLabel("Top 5");
-		la_resultOut = new JLabel("<html>1. Null <br>2. Null<br>3. Null<br>4. Null<br>5. Null<br></html>");
+		la_resultOut = new JLabel(outboundLabelString);
 		
-		//두 번째 레이아웃
-		p_total = new JPanel();
 		
 		//세 번째 레이아웃
+		List<Map<String, Double>> categoryList =ioRequestDAO.selectCategoryQuantityPercent();
+		circleChart1 = new CircleChart("카테고리 별 총 출고 백분율", categoryList);
 		p_category1 = new JPanel();
 		p_category2 = new JPanel();
 		
 		/*스타일----------------------------------------------------------------------------*/
 		//최상위 레이아웃 스타일 적용
-		Dimension d_layout = new Dimension(Config.CONTENT_BODY_WIDTH - Config.CONTENT_BODY_BORDER_WIDTH * 2,
-				(Config.CONTENT_BODY_HEIGHT - Config.CONTENT_BODY_BORDER_HEIGHT * 2)/3-10);
+		Dimension d_layout = new Dimension(Config.CONTENT_BODY_WIDTH - Config.CONTENT_BODY_BORDER_WIDTH * 2-10,
+				(Config.CONTENT_BODY_HEIGHT - Config.CONTENT_BODY_BORDER_HEIGHT * 2)/2-10);
 		p_top.setPreferredSize(d_layout);
 		p_center.setPreferredSize(d_layout);
 		p_bottom.setPreferredSize(d_layout);
@@ -87,7 +135,7 @@ public class StatisticPage extends ExampleContentPage{
 		
 		//첫번째 레이아웃 항목 스타일 지정
 		tab.setBorder(BorderFactory.createCompoundBorder());
-		tab.setPreferredSize(new Dimension(400, 250));
+		tab.setPreferredSize(new Dimension(400, 370));
 		
 		Font titleFont = new Font("맑은고딕", Font.BOLD, 25);
 		Font listFont = new Font("맑은고딕", Font.PLAIN, 18);
@@ -103,29 +151,30 @@ public class StatisticPage extends ExampleContentPage{
 		la_titleOut.setPreferredSize(d_label1);
 		la_resultOut.setPreferredSize(d_label2);
 		
-		Dimension d_label3 = new Dimension(210, 250);
+		Dimension d_label3 = new Dimension(210, 370);
 		p_toplist1.setBorder(BorderFactory.createTitledBorder("입고량"));
 		p_toplist1.setPreferredSize(d_label3);
 		p_toplist2.setBorder(BorderFactory.createTitledBorder("출고량"));
 		p_toplist2.setPreferredSize(d_label3);
 		
-		//두번째 레이아웃 항목 스타일 지정
-		p_total.setPreferredSize(new Dimension(800, 250));
-		p_total.setBorder(BorderFactory.createTitledBorder("Total"));
 		
 		//세번째 레이아웃 항목 스타일 지정
-		Dimension d_category = new Dimension(400, 250);
+		Dimension d_category = new Dimension(400, 370);
 		p_category1.setPreferredSize(d_category);
 		p_category2.setPreferredSize(d_category);
 		
-		p_category1.setBorder(BorderFactory.createTitledBorder("불량손실비율"));
+		p_category1.setBorder(BorderFactory.createTitledBorder("카테고리별 출고 비율"));
 		p_category2.setBorder(BorderFactory.createTitledBorder("창고 내 밀집도"));
 		
 		/*조립----------------------------------------------------------------------------*/
 		this.setLayout(new FlowLayout());
+		p_inbound.add(inboundBarChart);
 		tab.add("입고량", p_inbound);
+		p_outbound.add(outboundBarChart);
 		tab.add("출고량", p_outbound);
+		p_inventory.add(stockBarChart);
 		tab.add("재고량", p_inventory);
+		
 		p_top.add(tab);
 		p_toplist1.add(la_titleIn);
 		p_toplist1.add(la_resultIn);
@@ -135,10 +184,9 @@ public class StatisticPage extends ExampleContentPage{
 		p_top.add(p_toplist2);
 		add(p_top);
 		
-		p_center.add(p_total);
-		add(p_center);
-		
+		p_category1.add(circleChart1);
 		p_bottom.add(p_category1);
+		p_category2.add(hBarChart);
 		p_bottom.add(p_category2);
 		add(p_bottom);
 

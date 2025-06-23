@@ -57,6 +57,4 @@ public class Config {
 	public static final String USER = "sinse3";
 	public static final String PWD = "sinse3!@#";
 	
-	
-	
 }

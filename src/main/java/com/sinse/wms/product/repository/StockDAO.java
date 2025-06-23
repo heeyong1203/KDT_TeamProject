@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.sinse.wms.common.StockRecord;
 import com.sinse.wms.common.util.DBManager;
@@ -115,6 +117,77 @@ public class StockDAO {
 				list.add(stock);
 			}
 			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			dbManager.release(pstmt, rs);
+		}
+		return list;
+	}
+	
+	//카테고리 별 총 재고 수량 파악
+	public List<Map<String, Integer>> selectTotalStockByCategory(){
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List <Map<String, Integer>> list = new ArrayList<>();
+		
+		con = dbManager.getConnetion();
+		
+		try {
+			StringBuffer sql = new StringBuffer();
+			sql.append("select c.category_name, sum(s.stock_quantity) as total_stock"
+					+ " from stock s join product p on s.product_id = p.product_id"
+					+ " join category c on p.category_id = c.category_id"
+					+ " group by c.category_name"
+					+ " having sum(s.stock_quantity)>0"
+					+ " order by total_stock desc limit 10");
+			pstmt = con.prepareStatement(sql.toString());
+			
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				Map<String, Integer> map = new HashMap<>();
+				map.put(rs.getString("c.category_name"), rs.getInt("total_stock"));
+				list.add(map);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			dbManager.release(pstmt, rs);
+		}
+
+		return list;
+	}
+	
+	//재고 창고별 상품 총 수량 파악
+	public List<Stock> selectTotalStockByLocation(){
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		List<Stock> list = new ArrayList<>();
+		
+		con = dbManager.getConnetion();
+		
+		try {
+			StringBuffer sql = new StringBuffer();
+			sql.append("select l.location_name, sum(s.stock_quantity)"
+					+ " from stock s inner join location l on s.location_id = l.location_id"
+					+ " group by location_name order by sum(s.stock_quantity) desc limit 5");
+			pstmt = con.prepareStatement(sql.toString());
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				Stock stock = new Stock();
+				Location location = new Location();
+				
+				location.setLocation_name(rs.getString("l.location_name"));
+				stock.setLocation(location);
+				
+				stock.setStock_quantity(rs.getInt("sum(s.stock_quantity)"));
+				list.add(stock);
+			}
+		
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
