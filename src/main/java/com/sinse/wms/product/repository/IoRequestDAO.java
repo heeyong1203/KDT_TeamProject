@@ -26,7 +26,7 @@ public class IoRequestDAO {
             while (rs.next()) {
                 IoRequest io = new IoRequest();
                 io.setIoRequest_id(rs.getInt("iorequest_id"));
-                io.setIoRequest_type(rs.getInt("iorequest_type"));
+                io.setIoRequest_type(rs.getString("iorequest_type"));
                 io.setQuantity(rs.getInt("quantity"));
                 io.setRequest_reason(rs.getString("request_reason"));
                 io.setRequest_at(rs.getDate("request_at"));
@@ -71,7 +71,7 @@ public class IoRequestDAO {
                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
             pstmt = con.prepareStatement(sql);
-            pstmt.setInt(1, io.getIoRequest_type());
+            pstmt.setString(1, io.getIoRequest_type());
             pstmt.setInt(2, io.getProduct().getProduct_id());
             pstmt.setInt(3, io.getQuantity());
             pstmt.setInt(4, io.getLocation().getLocation_id());
@@ -103,7 +103,7 @@ public class IoRequestDAO {
                        + "WHERE iorequest_id=?";
 
             pstmt = con.prepareStatement(sql);
-            pstmt.setInt(1, io.getIoRequest_type());
+            pstmt.setString(1, io.getIoRequest_type());
             pstmt.setInt(2, io.getProduct().getProduct_id());
             pstmt.setInt(3, io.getQuantity());
             pstmt.setInt(4, io.getLocation().getLocation_id());

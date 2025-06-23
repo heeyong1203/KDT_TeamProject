@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 public class IoRequest {
 	private int IoRequest_id;
-	private int IoRequest_type;
+	private String IoRequest_type;
 	private Product product; //product_id;
 	private int quantity;
 	private Location location; //location_id;
@@ -23,10 +23,10 @@ public class IoRequest {
 	public void setIoRequest_id(int ioRequest_id) {
 		IoRequest_id = ioRequest_id;
 	}
-	public int getIoRequest_type() {
+	public String getIoRequest_type() {
 		return IoRequest_type;
 	}
-	public void setIoRequest_type(int ioRequest_type) {
+	public void setIoRequest_type(String ioRequest_type) {
 		IoRequest_type = ioRequest_type;
 	}
 	public Product getProduct() {
