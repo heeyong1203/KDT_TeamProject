@@ -76,7 +76,7 @@ public class InboundInspectionPage extends BaseContentPage {
         
     /*------------------------------------------------
       버튼 생성 함수
-	------------------------------------------------*/
+    ------------------------------------------------*/
     private JPanel createButtons() {
 	  	
 	  	JPanel p_bt = new JPanel();
@@ -103,13 +103,13 @@ public class InboundInspectionPage extends BaseContentPage {
     
     /*------------------------------------------------
       테이블 다시 보여주기 함수
-	------------------------------------------------*/
+    ------------------------------------------------*/
     private void reload() {
         // 위 조건으로 dao 재호출
     	rawData = dao.selectByFilter(io_request_type, status_name, IoFilterHelper.getFilterValues(filters)); 
         
         // 새로운 테이블 모델 생성
-    	tableModel = IoViewHelper.toTableModel(rawData, Config.TABLE_COLUMNS); // 테이블 모델
+    	tableModel = IoViewHelper.toTableModel(rawData, Config.TABLE_COLUMNS, status_name, true); // 테이블 모델
     	Object[] emptyRow = new Object[tableModel.getColumnCount()]; // 0번째 입력행
         
         // 기존 테이블에서 새 모델로 변경
