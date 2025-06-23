@@ -15,7 +15,7 @@ public class IoRequest {
 	private Date request_at;
 	private Date expected_date;
 	private Member  member; //approve_member_id;
-	private Date approve_at;
+	private Date approved_at;
 	private String remark;
 	public int getIoRequest_id() {
 		return IoRequest_id;
@@ -83,11 +83,11 @@ public class IoRequest {
 	public void setMember(Member member) {
 		this.member = member;
 	}
-	public Date getApprove_at() {
-		return approve_at;
+	public Date getApproved_at() {
+		return approved_at;
 	}
-	public void setApprove_at(Date approve_at) {
-		this.approve_at = approve_at;
+	public void setApproved_at(Date approved_at) {
+		this.approved_at = approved_at;
 	}
 	public String getRemark() {
 		return remark;
