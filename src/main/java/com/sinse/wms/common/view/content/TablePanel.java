@@ -20,9 +20,9 @@ public class TablePanel extends JPanel {
 	
 	
 	/*------------------------------------------------
-      테이블 렌더링 :	1) 숫자 → 천단위 콤마 
-					2) 자료형 별 텍스트 정렬
-					3) 체크박스, No 행 추가
+	테이블 렌더링 :	1) 숫자 → 천단위 콤마 
+			2) 자료형 별 텍스트 정렬
+			3) 체크박스, No 행 추가
 	------------------------------------------------*/
 	public TablePanel(DefaultTableModel tableModel, boolean isStatusPage, boolean editableFirstRow) {
 		// 테이블 모델 생성
@@ -67,7 +67,7 @@ public class TablePanel extends JPanel {
 	}
 
 	/*------------------------------------------------
-      테이블 셀 글씨 정렬 & 숫자 천단위 콤마 생성 함수
+      	  테이블 셀 글씨 정렬 & 숫자 천단위 콤마 생성 함수
 	------------------------------------------------*/
 	private void applyCellFormatting(JTable table) {
 		for (int i = 0; i < table.getColumnCount(); i++) {
@@ -110,7 +110,7 @@ public class TablePanel extends JPanel {
 	}
 	
 	/*------------------------------------------------
-      모델 변경이 필요할 때 사용하는 함수
+      	  모델 변경이 필요할 때 사용하는 함수
 	------------------------------------------------*/
 	public void setModel(DefaultTableModel model) {
 		this.model = model;
