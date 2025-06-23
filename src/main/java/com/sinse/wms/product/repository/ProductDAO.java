@@ -17,6 +17,41 @@ import com.sinse.wms.product.model.ProductUnit;
 public class ProductDAO {
 	DBManager dbManager = DBManager.getInstance();
 
+	// 품목명 조회
+	public List<String> selectProductNames() {
+	    List<String> names = new ArrayList<>();
+	    String sql = "SELECT DISTINCT product_name FROM product";
+
+	    try (Connection con = dbManager.getConnetion();
+	         PreparedStatement pstmt = con.prepareStatement(sql);
+	         ResultSet rs = pstmt.executeQuery()) {
+
+	        while (rs.next()) {
+	            names.add(rs.getString("product_name"));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return names;
+	}
+
+	// 품목코드 조회
+	public List<String> selectProductCodes() {
+	    List<String> codes = new ArrayList<>();
+	    String sql = "SELECT DISTINCT product_code FROM product";
+
+	    try (Connection con = dbManager.getConnetion();
+	         PreparedStatement pstmt = con.prepareStatement(sql);
+	         ResultSet rs = pstmt.executeQuery()) {
+
+	        while (rs.next()) {
+	            codes.add(rs.getString("product_code"));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return codes;
+	}
 	// 전체 상품 조회
 	public List<Product> selectAll() {
 		Connection con = null;
