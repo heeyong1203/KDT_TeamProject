@@ -1,5 +1,6 @@
 package com.sinse.wms.common.view.content;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.util.LinkedHashSet;
