@@ -3,42 +3,93 @@ package com.sinse.wms.inbound.view;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.swing.JDialog;
 import javax.swing.JPanel;
 
+import com.sinse.wms.common.Config;
+import com.sinse.wms.common.view.button.OutLineButton;
 import com.sinse.wms.common.view.content.BaseContentPage;
-import com.sinse.wms.common.view.content.LabeledComboBox;
+import com.sinse.wms.inbound.regist.view.IoRegistPageLayout;
+import com.sinse.wms.io.approve.IoRequestApprovalController;
+import com.sinse.wms.io.regist.IoRegistPageController;
+import com.sinse.wms.io.util.IoFilterController;
+import com.sinse.wms.io.view.IoFilterPanel;
+import com.sinse.wms.product.model.IoRequest;
 
 public class InboundRequestPage extends BaseContentPage {
-    JPanel p_wrapper;
-    LabeledComboBox[] filters;
+	private String ioRequestType = "입고";
+	private String statusName = "요청";
+	
+	private IoFilterPanel filterPanel;
+    private OutLineButton bt_load, bt_regist, bt_registAll, bt_approved, bt_denied;
+    private IoFilterController controller;
+    private JDialog registPage;
 
     public InboundRequestPage(Color color) {
-        // ... 기본 스타일 설정 ...
+    	setLayout(new FlowLayout(FlowLayout.CENTER, 0, 30)); 	// 레이아웃 스타일 설정
 
-        p_wrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 7));
-        p_wrapper.setPreferredSize(new Dimension(870, 80));
-        p_wrapper.setOpaque(false);
+		List<IoRequest> emptyData = new ArrayList<>();
+		filterPanel = new IoFilterPanel(emptyData, statusName); // 콤보박스와 테이블을 합친 레이아웃 클래스
+	    add(filterPanel);                  						// 화면에 부착
+		add(createButtons()); 									// 버튼 부착
+		
+		// 조회 이벤트 구현
+		bt_load.addActionListener(e->{
+			controller = new IoFilterController(filterPanel.getP_filters(), filterPanel.getTableLayout(), ioRequestType, statusName);
+			controller.loadTable();
+		});
+		
+		// 등록 이벤트 구현
+        bt_regist.addMouseListener(new MouseAdapter() {
+        	public void mouseReleased(MouseEvent e) {
+        		IoRegistPageLayout page = new IoRegistPageLayout(statusName);
+                new IoRegistPageController(page); // controller 생성 시 내부에서 버튼 이벤트 연결
+                page.setLocationRelativeTo(null);
+                page.setVisible(true);
+        	};
+        });
+        
+        // 승인, 거절 이벤트 구현
+        bt_approved.addMouseListener(new MouseAdapter() {
+        	public void mouseReleased(MouseEvent e) {
+        		new IoRequestApprovalController(filterPanel).approveRequest();
+        	}
+        });
+        bt_denied.addMouseListener(new MouseAdapter() {
+        	public void mouseReleased(MouseEvent e) {
+        		new IoRequestApprovalController(filterPanel).denyRequests();
+        	}
+		});   
+    }
+    
+    /*------------------------------------------------
+      버튼 생성 함수
+	------------------------------------------------*/
+    private JPanel createButtons() {
+	  	JPanel p_bt = new JPanel();
+	  	p_bt.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+	  	p_bt.setPreferredSize(new Dimension(Config.CONTENT_BODY_WIDTH-110, 35));
+	  	p_bt.setOpaque(false);
+	
+	  	bt_load = new OutLineButton("조회", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
+		bt_regist = new OutLineButton("단일등록", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
+		bt_registAll = new OutLineButton("일괄등록", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
+		bt_approved = new OutLineButton("요청수락", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
+		bt_denied = new OutLineButton("요청거절", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
+		
+		p_bt.add(bt_load); // 버튼 붙이기
+		p_bt.add(bt_regist);
+		p_bt.add(bt_registAll);
+		p_bt.add(bt_approved);
+		p_bt.add(bt_denied);
 
-        // 라벨 및 JComboBox 사이즈 지정
-        Dimension labelSize = new Dimension(80, 30);
-        Dimension comboSize = new Dimension(230, 30);
-        Dimension comboSize2 = new Dimension(150, 30);
-
-        // 라벨 및 JComboBox 묶음 지정
-        filters = new LabeledComboBox[] { // new String[]{} 대신 데이터 배열 넣어주시면 될 것 같습니다.
-            new LabeledComboBox("거래처", new String[]{"A사", "B사", "C사"}, labelSize, comboSize),
-            new LabeledComboBox("부서명", new String[]{"영업1팀", "영업2팀", "마케팅1팀", "마케팅2팀"}, labelSize, comboSize2),
-            new LabeledComboBox("사원명", new String[]{"이경규", "김국진", "강호동", "유재석", "전현무", "장도연"}, labelSize, comboSize2),
-            new LabeledComboBox("품목코드", new String[]{"ST-20001", "ST-20002", "ST-20003", "ST-20004", "ST-20005", "ST-20006"}, labelSize, comboSize),
-            new LabeledComboBox("품목명", new String[]{"A4 복사용지 80g", "3단 서류함", "유성 네임펜", "고무줄 500g"}, labelSize, comboSize2),
-            new LabeledComboBox("진행상태", new String[]{"요청", "대기", "승인", "반려"}, labelSize, comboSize2)
-        };
-
-        for (LabeledComboBox filter : filters) {
-            p_wrapper.add(filter);
-        }
-
-        add(p_wrapper);
+		add(p_bt);
+    
+		return p_bt;
     }
 }

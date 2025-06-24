@@ -13,12 +13,13 @@ import com.sinse.wms.common.exception.CompanySelectException;
 import com.sinse.wms.common.exception.CompanyUpdateException;
 import com.sinse.wms.common.util.DBManager;
 import com.sinse.wms.product.model.Company;
+import com.sinse.wms.product.model.Member;
 
 public class CompanyDAO {
 	DBManager dbManager = DBManager.getInstance();
 	
 	// comapny명으로 company 조회
-	public Company findByName(String name) throws CompanySelectException{
+	public Company findByName(String name) {
 		Company company = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -37,9 +38,6 @@ public class CompanyDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new CompanySelectException("거래처 조회 실패", e);
-		} finally {
-			dbManager.release(pstmt, rs);
 		}
 		return company;
 	}

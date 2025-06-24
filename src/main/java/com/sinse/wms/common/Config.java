@@ -55,8 +55,7 @@ public class Config {
 	// 페이지 테이블 및 콤보박스 관련
 	public static final String[] FILTER_COLUMNS = { "거래처", "부서명", "사원명", "품목코드", "품목명", "진행상태" };
     public static final String[] TABLE_COLUMNS = { "선택", "No", "품목명", "품목코드", "진행상태", "상품단가", "입고수량", "현재재고수량" };
-    public static final String[] CURRENCY_UNITS = {"원", "¥", "€", "$"};
-    public static final String[] QUANTITY_UNITS = {"개", "박스", "묶음", "건", "EA", "팔레트"};
+	
 	
 	
 	//DATABASE CONFIG

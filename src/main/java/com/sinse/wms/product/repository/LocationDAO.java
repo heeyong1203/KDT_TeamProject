@@ -13,6 +13,7 @@ import com.sinse.wms.common.exception.LocationSelectException;
 import com.sinse.wms.common.exception.LocationUpdateException;
 import com.sinse.wms.common.util.DBManager;
 import com.sinse.wms.product.model.Location;
+import com.sinse.wms.product.model.Product;
 
 public class LocationDAO {
 	DBManager dbManager = DBManager.getInstance();
@@ -37,15 +38,12 @@ public class LocationDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new LocationSelectException("창고 위치 조회 실패", e);
-		} finally {
-			dbManager.release(pstmt, rs);
 		}
 		return location;
 	}  
 	
 	// 위치명 조회
-	public List<String> selectLocationNames() throws LocationSelectException {
+	public List<String> selectLocationNames() {
 	    List<String> names = new ArrayList<>();
 	    String sql = "SELECT DISTINCT location_name FROM location";
 
@@ -59,7 +57,6 @@ public class LocationDAO {
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();
-			throw new LocationSelectException("창고 위치 조회 실패", e);
 	    }
 	    return names;
 	}

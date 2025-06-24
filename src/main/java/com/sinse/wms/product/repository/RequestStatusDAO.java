@@ -37,8 +37,6 @@ public class RequestStatusDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			dbManager.release(pstmt, rs);
 		}
 		return status;
 	}  

@@ -7,7 +7,13 @@ import java.awt.FlowLayout;
 import javax.swing.JPanel;
 
 import com.sinse.wms.common.view.content.BaseContentPage;
-import com.sinse.wms.common.view.content.LabeledComboBox;
+import com.sinse.wms.inventory.model.InventoryTableModel;
+import com.sinse.wms.io.view.LabeledComboBox;
+import com.sinse.wms.product.model.Company;
+import com.sinse.wms.product.model.Product;
+import com.sinse.wms.product.repository.CompanyDAO;
+import com.sinse.wms.product.repository.ProductDAO;
+import com.sinse.wms.product.repository.RequestStatusDAO;
 
 public class InventoryStatusPage extends BaseContentPage {
     JPanel p_wrapper;
