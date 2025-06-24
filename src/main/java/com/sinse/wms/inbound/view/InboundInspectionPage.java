@@ -1,28 +1,21 @@
 package com.sinse.wms.inbound.view;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import javax.swing.JPanel;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
 import com.sinse.wms.common.Config;
-import com.sinse.wms.common.exception.InvalidFormException;
 import com.sinse.wms.common.view.button.OutLineButton;
 import com.sinse.wms.common.view.content.BaseContentPage;
 import com.sinse.wms.common.view.content.FilterPanelResult;
 import com.sinse.wms.common.view.content.LabeledComboBox;
 import com.sinse.wms.common.view.content.TablePanel;
-import com.sinse.wms.inbound.repository.InboundDAO;
 import com.sinse.wms.product.model.IoRequest;
 import com.sinse.wms.product.repository.IoRequestDAO;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Arrays;
+import java.util.List;
 
 public class InboundInspectionPage extends BaseContentPage {
 	private LabeledComboBox[] filters;
