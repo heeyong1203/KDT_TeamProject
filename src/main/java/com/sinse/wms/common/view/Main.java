@@ -10,23 +10,23 @@ import javax.swing.JPanel;
 import com.sinse.wms.common.Config;
 import com.sinse.wms.common.util.SideMenuHelper;
 import com.sinse.wms.common.view.content.ContentHeader;
-import com.sinse.wms.common.view.content.ExampleContentPage;
 import com.sinse.wms.common.view.sidemenu.BaseSideMenu.SideMenuClickListener;
 import com.sinse.wms.common.view.sidemenu.Menu;
 import com.sinse.wms.common.view.sidemenu.SideBar;
 import com.sinse.wms.common.view.sidemenu.SideMenuGroup;
 import com.sinse.wms.common.view.toolbar.ToolBar;
 import com.sinse.wms.common.view.toolbar.ToolBar.ToolBarListener;
-import com.sinse.wms.statistic.view.StatisticPage;
 import com.sinse.wms.inbound.view.InboundInspectionPage;
 import com.sinse.wms.inbound.view.InboundRequestPage;
 import com.sinse.wms.inbound.view.InboundStatusPage;
 import com.sinse.wms.inventory.view.InventoryStatusPage;
+import com.sinse.wms.main.view.MainPage;
 import com.sinse.wms.membermanagement.view.MemberManagementPage;
 import com.sinse.wms.outbound.view.OutboundInspectionPage;
 import com.sinse.wms.outbound.view.OutboundRequestPage;
 import com.sinse.wms.outbound.view.OutboundStatusPage;
 import com.sinse.wms.report.view.ReportPage;
+import com.sinse.wms.statistic.view.StatisticPage;
 
 public class Main extends JFrame implements SideMenuClickListener, ToolBarListener {
 	private ToolBar toolbar;
@@ -93,7 +93,7 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 	private void initContents() {
 		this.cardLayout = new CardLayout();
 		this.bodyContent = new JPanel(cardLayout);
-		this.bodyContent.add(new ExampleContentPage(Color.WHITE), Menu.MAIN.name());
+		this.bodyContent.add(new MainPage(Color.WHITE), Menu.MAIN.name());
 		this.bodyContent.add(new InboundStatusPage(Color.RED), Menu.IN_BOUND_STATUS.name());
 		this.bodyContent.add(new InboundRequestPage(Color.LIGHT_GRAY), Menu.IN_BOUND_REQUEST.name());
 		this.bodyContent.add(new InboundInspectionPage(Color.PINK), Menu.IN_BOUND_INSPECTION.name());
@@ -102,7 +102,7 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 		this.bodyContent.add(new OutboundInspectionPage(Color.BLUE), Menu.OUT_BOUND_INSPECTION.name());
 		this.bodyContent.add(new InventoryStatusPage(Color.YELLOW), Menu.INVENTORY_STATUS.name());
 		this.bodyContent.add(new StatisticPage(), Menu.STATISTICS.name());
-		this.bodyContent.add(new ReportPage(Color.white),Menu.REPORT.name()); //통계 및 보고서 현황 페이지
+		this.bodyContent.add(new ReportPage(Color.white), Menu.REPORT.name()); // 통계 및 보고서 현황 페이지
 		this.bodyContent.add(new MemberManagementPage(), Menu.USER_MANAGEMENT.name());
 	}
 

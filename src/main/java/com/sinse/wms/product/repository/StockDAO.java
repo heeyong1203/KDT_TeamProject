@@ -19,6 +19,38 @@ import com.sinse.wms.product.model.Stock;
 
 public class StockDAO {
 	DBManager dbManager = DBManager.getInstance();
+	
+	
+	public int getExpectedOutboundQuantity() {
+        String sql = "SELECT IFNULL(SUM(quantity), 0) FROM Inout_Request WHERE request_type = '출고' AND expected_date = CURDATE()";
+        try (Connection conn = dbManager.getConnetion();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
+    }
+
+    public int getExpectedInboundQuantity() {
+        String sql = "SELECT IFNULL(SUM(quantity), 0) FROM Inout_Request WHERE request_type = '입고' AND expected_date = CURDATE()";
+        try (Connection conn = dbManager.getConnetion();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
+    }
+
+    public int getTodayProfit() {
+        String sql = "SELECT IFNULL(SUM(r.quantity * p.price), 0) FROM Inout_Request r  JOIN Product p ON r.product_id = p.product_id WHERE r.request_type = '출고' AND r.expected_date = CURDATE()";
+        try (Connection conn = dbManager.getConnetion();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) return rs.getInt(1);
+        } catch (Exception e) { e.printStackTrace(); }
+        return 0;
+    }
+	
 	public List<StockRecord> selectRequestByTypeAndDate(String type, String startDate, String endDate) {
 	    List<StockRecord> list = new ArrayList<>();
 	    String sql = "SELECT r.io_request_type, r.request_at, r.quantity, p.product_name, l.location_name FROM io_request r JOIN product p ON r.product_id = p.product_id JOIN location l ON r.location_id = l.location_id WHERE r.io_request_type = ? AND r.request_at BETWEEN ? AND ?";
