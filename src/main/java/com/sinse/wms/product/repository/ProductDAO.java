@@ -21,9 +21,8 @@ public class ProductDAO {
 	public List<String> selectProductNames() {
 	    List<String> names = new ArrayList<>();
 	    String sql = "SELECT DISTINCT product_name FROM product";
-
-	    try (Connection con = dbManager.getConnetion();
-	         PreparedStatement pstmt = con.prepareStatement(sql);
+	    Connection con = dbManager.getConnetion();
+	    try (PreparedStatement pstmt = con.prepareStatement(sql);
 	         ResultSet rs = pstmt.executeQuery()) {
 
 	        while (rs.next()) {
@@ -39,9 +38,8 @@ public class ProductDAO {
 	public List<String> selectProductCodes() {
 	    List<String> codes = new ArrayList<>();
 	    String sql = "SELECT DISTINCT product_code FROM product";
-
-	    try (Connection con = dbManager.getConnetion();
-	         PreparedStatement pstmt = con.prepareStatement(sql);
+	    Connection con =  dbManager.getConnetion();
+	    try (PreparedStatement pstmt = con.prepareStatement(sql);
 	         ResultSet rs = pstmt.executeQuery()) {
 
 	        while (rs.next()) {
@@ -52,6 +50,7 @@ public class ProductDAO {
 	    }
 	    return codes;
 	}
+	
 	// 전체 상품 조회
 	public List<Product> selectAll() {
 		Connection con = null;

@@ -22,8 +22,9 @@ public class StockDAO {
 	
 	
 	public int getExpectedOutboundQuantity() {
-        String sql = "SELECT IFNULL(SUM(quantity), 0) FROM Inout_Request WHERE request_type = '출고' AND expected_date = CURDATE()";
-        try (Connection conn = dbManager.getConnetion();
+        String sql = "SELECT IFNULL(SUM(quantity), 0) FROM io_request WHERE io_request_type = '출고' AND expected_date = CURDATE()";
+        Connection conn = dbManager.getConnetion();
+        try (
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
             if (rs.next()) return rs.getInt(1);
@@ -32,8 +33,9 @@ public class StockDAO {
     }
 
     public int getExpectedInboundQuantity() {
-        String sql = "SELECT IFNULL(SUM(quantity), 0) FROM Inout_Request WHERE request_type = '입고' AND expected_date = CURDATE()";
-        try (Connection conn = dbManager.getConnetion();
+        String sql = "SELECT IFNULL(SUM(quantity), 0) FROM io_request WHERE io_request_type = '입고' AND expected_date = CURDATE()";
+        Connection conn = dbManager.getConnetion();
+        try (
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
             if (rs.next()) return rs.getInt(1);
@@ -42,8 +44,9 @@ public class StockDAO {
     }
 
     public int getTodayProfit() {
-        String sql = "SELECT IFNULL(SUM(r.quantity * p.price), 0) FROM Inout_Request r  JOIN Product p ON r.product_id = p.product_id WHERE r.request_type = '출고' AND r.expected_date = CURDATE()";
-        try (Connection conn = dbManager.getConnetion();
+        String sql = "SELECT IFNULL(SUM(r.quantity * p.product_price), 0) FROM io_request r  JOIN product p ON r.product_id = p.product_id WHERE r.io_request_type = '출고' AND r.expected_date = CURDATE()";
+        Connection conn = dbManager.getConnetion();
+        try (
              PreparedStatement pstmt = conn.prepareStatement(sql);
              ResultSet rs = pstmt.executeQuery()) {
             if (rs.next()) return rs.getInt(1);
@@ -55,8 +58,8 @@ public class StockDAO {
 	    List<StockRecord> list = new ArrayList<>();
 	    String sql = "SELECT r.io_request_type, r.request_at, r.quantity, p.product_name, l.location_name FROM io_request r JOIN product p ON r.product_id = p.product_id JOIN location l ON r.location_id = l.location_id WHERE r.io_request_type = ? AND r.request_at BETWEEN ? AND ?";
 
+	    Connection con = dbManager.getConnetion();
 	    try (
-	        Connection con = dbManager.getConnetion();
 	        PreparedStatement pstmt = con.prepareStatement(sql);
 	    ) {
 	        pstmt.setString(1, type); // 예: "입고", "출고", "변경"
@@ -119,7 +122,7 @@ public class StockDAO {
 	}
 
 	//상품별 총합계 테이블 조회
-	public List<Stock> selectProductQuantity(){
+	public List<Stock> selectProductQuantity(Product p){
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -131,8 +134,33 @@ public class StockDAO {
 			StringBuffer sql = new StringBuffer();
 			sql.append("SELECT p.product_id, p.product_name, p.product_code, p.product_stock, SUM(s.stock_quantity) as total"
 					+ " FROM product p LEFT JOIN stock s ON p.product_id=s.product_id"
-					+ " GROUP BY p.product_id, p.product_name, p.product_stock");
+					+ " LEFT JOIN company c ON p.company_id = c.company_id"
+					+ " LEFT JOIN io_request i ON p.product_id = i.product_id");
+			sql.append(" WHERE 1=1");	//조건 조합을 위한 기본 true 조건
+			
+			List<Object> paramList = new ArrayList<>();
+			
+			if(p.getCompany() != null && p.getCompany().getCompany_name() != null && !p.getCompany().getCompany_name().isEmpty()) {
+				sql.append(" AND c.company_name = ?");
+				paramList.add(p.getCompany().getCompany_name());
+			}
+			if(p.getProduct_code() != null && !p.getProduct_code().isEmpty()) {
+				sql.append(" AND p.product_code = ?");
+				paramList.add(p.getProduct_code());
+			}
+			if (p.getProduct_name() != null && !p.getProduct_name().isEmpty()) {
+			    sql.append(" AND p.product_name = ?");
+			    paramList.add(p.getProduct_name());
+			}
+			
+			sql.append(" GROUP BY p.product_id, p.product_name, p.product_code, p.product_stock");
 			pstmt = con.prepareStatement(sql.toString());
+			
+			//바인딩
+			for(int i=0; i<paramList.size(); i++) {
+				pstmt.setObject(i+1, paramList.get(i));
+			}
+			
 			rs = pstmt.executeQuery();
 			while(rs.next()) {
 				Stock stock = new Stock();
@@ -188,7 +216,6 @@ public class StockDAO {
 		}finally {
 			dbManager.release(pstmt, rs);
 		}
-
 		return list;
 	}
 	
