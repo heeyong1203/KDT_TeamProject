@@ -8,16 +8,20 @@ import com.sinse.wms.product.model.Member;
 
 public class MemberManagementTableModel extends AbstractTableModel {
 	private List<Member> members;
-	
+
 	public MemberManagementTableModel(List<Member> members) {
 		this.members = members;
 	}
 	
+	public Member getMemberAt(int row) {
+		return members.get(row);
+	}
+
 	@Override
 	public int getRowCount() {
 		return this.members.size();
 	}
-	
+
 	@Override
 	public String getColumnName(int column) {
 		switch (column) {
@@ -29,6 +33,8 @@ public class MemberManagementTableModel extends AbstractTableModel {
 			return "관리자";
 		case 3:
 			return "부서";
+		case 4: 
+			return "직급";
 		default:
 			return "휴면상태";
 		}
@@ -36,7 +42,7 @@ public class MemberManagementTableModel extends AbstractTableModel {
 
 	@Override
 	public int getColumnCount() {
-		return 5;
+		return 6;
 	}
 
 	@Override
@@ -48,11 +54,21 @@ public class MemberManagementTableModel extends AbstractTableModel {
 		case 1:
 			return member.getMember_email();
 		case 2:
-			return member.getAuth().getAuth_name();
+			if (member.getAuth().getAuth_id() <= 3) {
+				return "O";
+			} else {
+				return "X";
+			}
 		case 3:
 			return member.getDept().getDept_name();
+		case 4:
+			return member.getAuth().getAuth_name();
 		default:
-			return null;
+			if (member.isDormant()) {
+				return "O";
+			} else {
+				return "X";
+			}
 		}
 	}
 
