@@ -60,7 +60,7 @@ public class ToolBar extends JPanel {
 		add(Box.createVerticalStrut(400));
 		
 		add(info);
-		myPage.setOnClickListener(() -> {
+		info.setOnClickListener(() -> {
 			if (this.listener != null) {
 				this.listener.onClickInfo();
 			}
@@ -68,7 +68,7 @@ public class ToolBar extends JPanel {
 		add(Box.createVerticalStrut(50));
 		
 		add(settings);
-		myPage.setOnClickListener(() -> {
+		settings.setOnClickListener(() -> {
 			if (this.listener != null) {
 				this.listener.onClickSettings();
 			}

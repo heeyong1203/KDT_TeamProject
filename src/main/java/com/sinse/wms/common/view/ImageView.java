@@ -56,6 +56,7 @@ public class ImageView extends JPanel {
 	 * @see ImageViewClickListener
 	 */
 	public void setOnClickListener(ImageViewClickListener listener) {
+		this.listener = listener;
 		if (listener != null) {
 			this.setCursor(new Cursor(Cursor.HAND_CURSOR));
 			this.addMouseListener(adapter);

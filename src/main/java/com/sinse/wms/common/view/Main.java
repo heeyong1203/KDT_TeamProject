@@ -22,6 +22,7 @@ import com.sinse.wms.inbound.view.InboundStatusPage;
 import com.sinse.wms.inventory.view.InventoryStatusPage;
 import com.sinse.wms.main.view.MainPage;
 import com.sinse.wms.membermanagement.view.MemberManagementPage;
+import com.sinse.wms.menu.help.view.HelpMenu;
 import com.sinse.wms.outbound.view.OutboundInspectionPage;
 import com.sinse.wms.outbound.view.OutboundRequestPage;
 import com.sinse.wms.outbound.view.OutboundStatusPage;
@@ -55,6 +56,8 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 		add(toolbar, BorderLayout.WEST);
 		add(centerWrapper, BorderLayout.CENTER);
 
+		toolbar.setToolBarListener(this);
+		
 		setVisible(true);
 		pack();
 	}
@@ -104,6 +107,8 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 		this.bodyContent.add(new StatisticPage(), Menu.STATISTICS.name());
 		this.bodyContent.add(new ReportPage(Color.white), Menu.REPORT.name()); // 통계 및 보고서 현황 페이지
 		this.bodyContent.add(new MemberManagementPage(), Menu.USER_MANAGEMENT.name());
+		
+		this.bodyContent.add(new HelpMenu(), Menu.HELP.name());	//도움말 페이지
 	}
 
 	/**
@@ -165,6 +170,9 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 	@Override
 	public void onClickInfo() {
 		// TODO("툴바 돋보기 정보 아이콘 클릭시 구현");
+		this.cardLayout.show(this.bodyContent, Menu.HELP.name());
+		
+//		System.out.println("버튼 클릭");
 	}
 
 	@Override
