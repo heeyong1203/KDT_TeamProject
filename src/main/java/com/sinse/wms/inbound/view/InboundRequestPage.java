@@ -87,7 +87,6 @@ public class InboundRequestPage extends BaseContentPage {
       버튼 생성 함수
 	------------------------------------------------*/
     private JPanel createButtons() {
-	  	
 	  	JPanel p_bt = new JPanel();
 	  	p_bt.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 0));
 	  	p_bt.setPreferredSize(new Dimension(Config.CONTENT_BODY_WIDTH-110, 35));
