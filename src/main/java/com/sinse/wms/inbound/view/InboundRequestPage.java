@@ -150,5 +150,4 @@ public class InboundRequestPage extends BaseContentPage {
         }
         return registPage;
     }
-    
 }
