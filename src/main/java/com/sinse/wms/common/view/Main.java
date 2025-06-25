@@ -23,9 +23,11 @@ import com.sinse.wms.inventory.view.InventoryStatusPage;
 import com.sinse.wms.main.view.MainPage;
 import com.sinse.wms.membermanagement.view.MemberManagementPage;
 import com.sinse.wms.menu.help.view.HelpMenu;
+import com.sinse.wms.mypage.view.Mypage;
 import com.sinse.wms.outbound.view.OutboundInspectionPage;
 import com.sinse.wms.outbound.view.OutboundRequestPage;
 import com.sinse.wms.outbound.view.OutboundStatusPage;
+import com.sinse.wms.product.model.Member;
 import com.sinse.wms.report.view.ReportPage;
 import com.sinse.wms.statistic.view.StatisticPage;
 
@@ -38,8 +40,10 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 	private JPanel bodyContent;
 	private CardLayout cardLayout;
 	private SideMenuGroup[] sideMenuGroups;
+	Member m; //로그인한 사용자 정보 받아옴
 
-	public Main() {
+	public Main(Member m) {
+		this.m = m;
 		setSize(Config.MAIN_WINDOW_WIDTH, Config.MAIN_WINDOW_HEIGHT);
 		initToolbar();
 		initSideBar();
@@ -67,6 +71,7 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 	 */
 	private void initToolbar() {
 		this.toolbar = new ToolBar();
+		this.toolbar.setToolBarListener(this);
 	}
 
 	/**
@@ -96,7 +101,7 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 	private void initContents() {
 		this.cardLayout = new CardLayout();
 		this.bodyContent = new JPanel(cardLayout);
-		this.bodyContent.add(new MainPage(Color.WHITE), Menu.MAIN.name());
+		this.bodyContent.add(new MainPage(Color.WHITE,m), Menu.MAIN.name());
 		this.bodyContent.add(new InboundStatusPage(Color.RED), Menu.IN_BOUND_STATUS.name());
 		this.bodyContent.add(new InboundRequestPage(Color.LIGHT_GRAY), Menu.IN_BOUND_REQUEST.name());
 		this.bodyContent.add(new InboundInspectionPage(Color.PINK), Menu.IN_BOUND_INSPECTION.name());
@@ -107,8 +112,9 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 		this.bodyContent.add(new StatisticPage(), Menu.STATISTICS.name());
 		this.bodyContent.add(new ReportPage(Color.white), Menu.REPORT.name()); // 통계 및 보고서 현황 페이지
 		this.bodyContent.add(new MemberManagementPage(), Menu.USER_MANAGEMENT.name());
-		
+		this.bodyContent.add(new Mypage(Color.white,m), Menu.MY_PAGE.name());	
 		this.bodyContent.add(new HelpMenu(), Menu.HELP.name());	//도움말 페이지
+
 	}
 
 	/**
@@ -154,7 +160,8 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 
 	@Override
 	public void onClickMyPage() {
-		// TODO("툴바 사람 아이콘 클릭시 구현");
+		System.out.println("마이페이지클릭"); //클릭 이벤트 수신
+		this.cardLayout.show(this.bodyContent, Menu.MY_PAGE.name());
 	}
 
 	@Override

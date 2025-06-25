@@ -37,10 +37,12 @@ public class ToolBar extends JPanel {
 
 		add(myPage);
 		myPage.setOnClickListener(() -> {
+			System.out.println("마이페이지 아이콘 클릭됨");// 확인용
 			if (this.listener != null) {
 				this.listener.onClickMyPage();
 			}
 		});
+
 		add(Box.createVerticalStrut(50));
 		
 		add(messageBox);
@@ -54,7 +56,7 @@ public class ToolBar extends JPanel {
 		add(search);
 		search.setOnClickListener(() -> {
 			if (this.listener != null) {
-				this.listener.onClickMessageBox();
+				this.listener.onClickSearch();
 			}
 		});
 		add(Box.createVerticalStrut(400));
@@ -89,7 +91,6 @@ public class ToolBar extends JPanel {
 	 * 툴바 메뉴 클릭시 호출하는 인터페이스
 	 * @see Main 에 구현되어있음
 	 */
-
 	public interface ToolBarListener {
 		/**
 		 * 마이페이지 클릭시
@@ -116,5 +117,4 @@ public class ToolBar extends JPanel {
 		 */
 		void onClickSettings();
 	}
-
 }

@@ -1,5 +1,14 @@
 package com.sinse.wms.product.repository;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.sinse.wms.common.util.DBManager;
 import com.sinse.wms.product.model.Company;
 import com.sinse.wms.product.model.Dept;
@@ -9,14 +18,6 @@ import com.sinse.wms.product.model.Member;
 import com.sinse.wms.product.model.Product;
 import com.sinse.wms.product.model.RequestStatus;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class IoRequestDAO {
     DBManager dbManager = DBManager.getInstance();
@@ -260,6 +261,7 @@ public class IoRequestDAO {
             e.printStackTrace();
         } finally {
             dbManager.release(pstmt);
+            
         }
     }
 
@@ -292,6 +294,7 @@ public class IoRequestDAO {
             e.printStackTrace();
         } finally {
             dbManager.release(pstmt);
+           
         }
     }
 
@@ -309,8 +312,10 @@ public class IoRequestDAO {
             e.printStackTrace();
         } finally {
             dbManager.release(pstmt);
+           
         }
     }
+
 
  // 필터 요청 조회
     public List<IoRequest> selectByFilter(String io_request_type, String status_name, List<String> filters) { 

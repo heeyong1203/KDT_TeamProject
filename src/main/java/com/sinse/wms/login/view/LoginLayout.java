@@ -171,8 +171,9 @@ public class LoginLayout extends JFrame {
 			JOptionPane.showMessageDialog(this, m.getMember_name() + "님 환영합니다!");
 			this.dispose(); // 로그인 창 닫기
 
-			// 여기서 App.main() 실행!
-			com.sinse.wms.App.main(null);
+			
+			//로그인 사용자 정보를 함께 넘긴다.
+			com.sinse.wms.App.startWithUser(m);
 		} else {
 			JOptionPane.showMessageDialog(this, "로그인 실패!");
 		}
