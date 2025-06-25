@@ -5,11 +5,13 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
@@ -19,6 +21,9 @@ import com.sinse.wms.common.view.content.BaseContentPage;
 import com.sinse.wms.common.view.content.FilterPanelResult;
 import com.sinse.wms.common.view.content.LabeledComboBox;
 import com.sinse.wms.common.view.content.TablePanel;
+import com.sinse.wms.inbound.regist.OpenIoRegistPage;
+import com.sinse.wms.inbound.regist.RegistPageController;
+import com.sinse.wms.inbound.regist.view.IoRegistPageLayout;
 import com.sinse.wms.product.model.IoRequest;
 import com.sinse.wms.product.repository.IoRequestDAO;
 
@@ -31,9 +36,9 @@ public class InboundRequestPage extends BaseContentPage {
     List<IoRequest> rawData; // 전체 데이터
     private String io_request_type = "입고";
     private String status_name = "요청";
-    
     private OutLineButton bt_reload, bt_regist, bt_registAll, bt_approved, bt_denied;
-    
+    private JDialog registPage;
+
     public InboundRequestPage(Color color) {
     	setLayout(new FlowLayout(FlowLayout.CENTER, 0, 30)); // 레이아웃 스타일 설정
     	dao = new IoRequestDAO(); // DAO 객체 생성
@@ -73,11 +78,10 @@ public class InboundRequestPage extends BaseContentPage {
         
         bt_regist.addMouseListener(new MouseAdapter() {
         	public void mouseReleased(MouseEvent e) {
-        		OpenIORequestRegistPage();
+        		new OpenIoRegistPage(status_name);
         	};
         });
     }
-
         
     /*------------------------------------------------
       버튼 생성 함수
@@ -125,13 +129,26 @@ public class InboundRequestPage extends BaseContentPage {
     /*------------------------------------------------
       등록 페이지 이동 함수
 	------------------------------------------------*/
-    public void OpenIORequestRegistPage() {
-    	JFrame newFrame = new JFrame("입고 요청 등록");
-        newFrame.setSize(600, 500);
-        newFrame.setLocationRelativeTo(null);
-        newFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); // 이 창만 닫힘
-        newFrame.add(new JLabel("여긴 새 창입니다!"), "Center");
-        newFrame.setVisible(true);
+    public JDialog OpenIORequestRegistPage(String status_name) {
+    	if (registPage == null) {
+            registPage = new IoRegistPageLayout(status_name);
+            registPage.addWindowListener(new WindowAdapter() {
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    registPage = null;
+                }
+            });
+            registPage.setLocationRelativeTo(null);
+            
+            // Controller 연결 
+            new RegistPageController((IoRegistPageLayout) registPage).setCombo();
+        } else {
+            JOptionPane.showMessageDialog(registPage, "이미 등록 페이지가 열려있습니다.");
+            registPage.setAlwaysOnTop(true);   // 앞으로 가져오기
+            registPage.setAlwaysOnTop(false);
+            registPage.toFront();
+            registPage.requestFocus();
+        }
+        return registPage;
     }
-    
 }

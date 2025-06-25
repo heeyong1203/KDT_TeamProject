@@ -1,7 +1,6 @@
 package com.sinse.wms.product.model;
 
 import java.sql.Date;
-import java.time.LocalDateTime;
 
 public class IoRequest {
 	private int IoRequest_id;
@@ -12,11 +11,12 @@ public class IoRequest {
 	private Member request_member_id;
 	private String request_reason;
 	private RequestStatus status; //ststus_id;
-	private Date request_at;
-	private Date expected_date;
+	private Date request_at; 
+	private Date expected_date;  
 	private Member  member; //approve_member_id;
 	private Date approved_at;
 	private String remark;
+	
 	public int getIoRequest_id() {
 		return IoRequest_id;
 	}

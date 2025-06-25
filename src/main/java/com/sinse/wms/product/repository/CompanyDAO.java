@@ -9,10 +9,35 @@ import java.util.List;
 
 import com.sinse.wms.common.util.DBManager;
 import com.sinse.wms.product.model.Company;
+import com.sinse.wms.product.model.Member;
 
 public class CompanyDAO {
 	DBManager dbManager = DBManager.getInstance();
-
+	
+	// comapny명으로 company 조회
+	public Company findByName(String name) {
+		Company company = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String sql = "SELECT * FROM Company WHERE company_name = ?";
+		
+		Connection con = dbManager.getConnetion();
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, name);
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				company.setCompany_id(rs.getInt("company_id"));
+				company.setCompany_name(rs.getString("company_name"));	
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return company;
+	}  
+	
 	// select
 	public List<Company> selectAll() {
 		Connection con = null;

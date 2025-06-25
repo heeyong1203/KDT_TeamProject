@@ -10,11 +10,37 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.sinse.wms.common.util.DBManager;
+import com.sinse.wms.product.model.Member;
 import com.sinse.wms.product.model.RequestStatus;
 
 public class RequestStatusDAO {
 	DBManager dbManager = DBManager.getInstance();
-
+	
+	// 진행상태 조회
+	public RequestStatus findByName(String name) {
+		RequestStatus status = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String sql = "SELECT * FROM request_status WHERE status_name = ?";
+		
+		Connection con = dbManager.getConnetion();
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, name);
+			rs = pstmt.executeQuery();
+			
+			if (rs.next()) {
+				status = new RequestStatus();
+				status.setStatus_id(rs.getInt("status_id"));
+				status.setStatus_name(rs.getString("status_name"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return status;
+	}  
+	
 	// 전체 상태 목록 조회
 	public List<RequestStatus> selectAll() {
 		Connection con = null;
@@ -52,9 +78,10 @@ public class RequestStatusDAO {
 		con = dbManager.getConnetion();
 
 		try {
-			String sql = "INSERT INTO request_status(status_name) VALUES(?)";
+			String sql = "INSERT INTO request_status(status_id, status_name) VALUES(?, ?)";
 			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, status.getStatus_name());
+			pstmt.setInt(1, status.getStatus_id());
+			pstmt.setString(2, status.getStatus_name());
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

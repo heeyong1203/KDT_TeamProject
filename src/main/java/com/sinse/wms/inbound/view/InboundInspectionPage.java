@@ -31,7 +31,8 @@ public class InboundInspectionPage extends BaseContentPage {
     private String io_request_type = "입고";
     private String status_name = "검수요청";
     
-    private OutLineButton bt_reload, bt_regist, bt_registAll, bt_approved, bt_denied;
+    private OutLineButton bt_reload, bt_approved, bt_denied;
+
 
     public InboundInspectionPage(Color color) {
     	setLayout(new FlowLayout(FlowLayout.CENTER, 0, 30)); // 레이아웃 스타일 설정
@@ -81,15 +82,12 @@ public class InboundInspectionPage extends BaseContentPage {
 	  	p_bt.setPreferredSize(new Dimension(Config.CONTENT_BODY_WIDTH-110, 35));
 	  	p_bt.setOpaque(false);
 	
-	  	bt_reload = new OutLineButton("단일등록", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
-		bt_regist = new OutLineButton("단일등록", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
-		bt_registAll = new OutLineButton("일괄등록", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
+
+	  	bt_reload = new OutLineButton("조회", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
 		bt_approved = new OutLineButton("요청수락", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
 		bt_denied = new OutLineButton("요청거절", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
 		
 		p_bt.add(bt_reload); // 버튼 붙이기
-		p_bt.add(bt_regist);
-		p_bt.add(bt_registAll);
 		p_bt.add(bt_approved);
 		p_bt.add(bt_denied);
 

@@ -9,10 +9,54 @@ import java.util.List;
 
 import com.sinse.wms.common.util.DBManager;
 import com.sinse.wms.product.model.Location;
+import com.sinse.wms.product.model.Product;
 
 public class LocationDAO {
 	DBManager dbManager = DBManager.getInstance();
+	
+	// 위치명으로 위치테이블 조회
+	public Location findByName(String name) {
+		Location location = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		String sql = "SELECT * FROM location WHERE location_name = ?";
+		
+		Connection con = dbManager.getConnetion();
+		try {
+			pstmt = con.prepareStatement(sql);
+			pstmt.setString(1, name);
+			rs = pstmt.executeQuery();
+			if (rs.next()) {
+				location = new Location();
+				location.setLocation_id(rs.getInt("location_id"));
+				location.setLocation_name(rs.getString("location_name"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return location;
+	}  
+	
+	// 위치명 조회
+	public List<String> selectLocationNames() {
+	    List<String> names = new ArrayList<>();
+	    String sql = "SELECT DISTINCT location_name FROM location";
 
+	    Connection con = dbManager.getConnetion();
+	    try (
+	         PreparedStatement pstmt = con.prepareStatement(sql);
+	         ResultSet rs = pstmt.executeQuery()) {
+
+	        while (rs.next()) {
+	            names.add(rs.getString("location_name"));
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+	    return names;
+	}
+	
 	// 전체 위치 목록 조회
 	public List<Location> selectAll() {
 		Connection con = null;
