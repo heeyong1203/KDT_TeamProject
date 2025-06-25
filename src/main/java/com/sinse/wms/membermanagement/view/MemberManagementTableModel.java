@@ -62,7 +62,7 @@ public class MemberManagementTableModel extends AbstractTableModel {
 		case 3:
 			return member.getDept().getDept_name();
 		case 4:
-			return member.getAuth().getAuth_name();
+			return member.getJobGrade().getJobGradeName();
 		default:
 			if (member.isDormant()) {
 				return "O";

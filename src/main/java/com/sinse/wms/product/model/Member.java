@@ -10,7 +10,7 @@ public class Member {
 	private Date memberhiredate;
 	private Dept dept; //dept_id
 	private Auth auth; //auth_id;
-	private JobGrade jobGrade;
+	private JobGrade jobGrade; //job_grade
 	private boolean dormant;
 	
 	public int getMember_id() {

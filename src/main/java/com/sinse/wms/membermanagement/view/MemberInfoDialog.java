@@ -8,7 +8,6 @@ import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -27,9 +26,11 @@ import javax.swing.SwingConstants;
 
 import com.sinse.wms.common.Config;
 import com.sinse.wms.common.exception.MemberUpdateException;
+import com.sinse.wms.common.util.EmailValidator;
 import com.sinse.wms.common.view.button.FillButton;
 import com.sinse.wms.product.model.Auth;
 import com.sinse.wms.product.model.Dept;
+import com.sinse.wms.product.model.JobGrade;
 import com.sinse.wms.product.model.Member;
 import com.sinse.wms.product.repository.MemberDAO;
 
@@ -39,12 +40,14 @@ public class MemberInfoDialog extends JDialog {
 	private JLabel la_name;
 	private JLabel la_dept;
 	private JLabel la_auth;
+	private JLabel la_job_grade;
 	private JLabel la_email;
 	private JLabel la_pwd;
 	private JLabel la_hire_day;
 	private JTextField tf_name;
 	private JComboBox<String> cb_dept;
 	private JComboBox<String> cb_auth;
+	private JComboBox<String> cb_job_grade;
 	private JTextField tf_email;
 	private JPasswordField tf_pwd;
 	private JTextField tf_hire_day;
@@ -53,6 +56,7 @@ public class MemberInfoDialog extends JDialog {
 
 	private List<Dept> depts = null;
 	private List<Auth> auths = null;
+	private List<JobGrade> jobGrades = null;
 	private Member member = null;
 	private MemberDialogType type;
 
@@ -94,6 +98,8 @@ public class MemberInfoDialog extends JDialog {
 		this.la_dept.setPreferredSize(la_size);
 		this.la_auth = new JLabel("권한");
 		this.la_auth.setPreferredSize(la_size);
+		this.la_job_grade = new JLabel("직급");
+		this.la_job_grade.setPreferredSize(la_size);
 		this.la_email = new JLabel("이메일");
 		this.la_email.setPreferredSize(la_size);
 		this.la_pwd = new JLabel("패스워드");
@@ -104,8 +110,13 @@ public class MemberInfoDialog extends JDialog {
 		this.tf_name.setPreferredSize(tf_size);
 		this.cb_dept = new JComboBox<String>();
 		this.cb_dept.setPreferredSize(tf_size);
+		this.cb_dept.setBackground(getBackground());
 		this.cb_auth = new JComboBox<String>();
 		this.cb_auth.setPreferredSize(tf_size);
+		this.cb_auth.setBackground(getBackground());
+		this.cb_job_grade = new JComboBox<String>();
+		this.cb_job_grade.setPreferredSize(tf_size);
+		this.cb_job_grade.setBackground(getBackground());
 		this.tf_email = new JTextField();
 		this.tf_email.setPreferredSize(tf_size);
 		this.tf_pwd = new JPasswordField();
@@ -137,6 +148,8 @@ public class MemberInfoDialog extends JDialog {
 		p_wrapper.add(cb_dept);
 		p_wrapper.add(la_auth);
 		p_wrapper.add(cb_auth);
+		p_wrapper.add(la_job_grade);
+		p_wrapper.add(cb_job_grade);
 		p_wrapper.add(la_email);
 		p_wrapper.add(tf_email);
 		p_wrapper.add(la_pwd);
@@ -216,6 +229,7 @@ public class MemberInfoDialog extends JDialog {
 		String password = String.valueOf(this.tf_pwd.getPassword()).trim();
 		Dept dept = getSelectedDept();
 		Auth auth = getSelectedAuth();
+		JobGrade jobGrade = getSelectedJobGrade();
 
 		Member insertMember = new Member();
 		insertMember.setMember_name(name);
@@ -223,7 +237,8 @@ public class MemberInfoDialog extends JDialog {
 		insertMember.setMember_password(password);
 		insertMember.setDept(dept);
 		insertMember.setAuth(auth);
-		
+		insertMember.setJobGrade(jobGrade);
+
 		try {
 			memberDAO.insert(insertMember);
 			JOptionPane.showMessageDialog(this, "등록에 성공하였습니다.");
@@ -250,6 +265,7 @@ public class MemberInfoDialog extends JDialog {
 		String password = String.valueOf(this.tf_pwd.getPassword()).trim();
 		Dept dept = getSelectedDept();
 		Auth auth = getSelectedAuth();
+		JobGrade jobGrade = getSelectedJobGrade();
 
 		Member updateMember = this.member;
 		updateMember.setMember_name(name);
@@ -257,6 +273,7 @@ public class MemberInfoDialog extends JDialog {
 		updateMember.setMember_password(password);
 		updateMember.setDept(dept);
 		updateMember.setAuth(auth);
+		updateMember.setJobGrade(jobGrade);
 		
 		try {
 			this.memberDAO.update(updateMember);
@@ -279,14 +296,18 @@ public class MemberInfoDialog extends JDialog {
 		return this.auths.get(this.cb_auth.getSelectedIndex()-1);
 	}
 
+	private JobGrade getSelectedJobGrade() {
+		return this.jobGrades.get(this.cb_job_grade.getSelectedIndex()-1);
+	}
+
 	private List<String> getInvailds() {
 		List<String> invaild = new ArrayList<>();
 		if (this.tf_name.getText().trim().length() == 0) {
 			invaild.add("이름");
 		}
 
-		if (this.tf_email.getText().trim().length() == 0) {
-			invaild.add("이메일");
+		if (!EmailValidator.isValidEmailRegex(this.tf_email.getText())) {
+			invaild.add("이메일형식");
 		}
 
 		if (this.type == MemberDialogType.ADD && String.valueOf(this.tf_pwd.getPassword()).trim().length() == 0) {
@@ -299,6 +320,10 @@ public class MemberInfoDialog extends JDialog {
 
 		if (this.cb_auth.getSelectedIndex() == 0) {
 			invaild.add("권한");
+		}
+		
+		if(this.cb_job_grade.getSelectedIndex() == 0) {
+			invaild.add("직급");
 		}
 
 		return invaild;
@@ -316,6 +341,13 @@ public class MemberInfoDialog extends JDialog {
 		String[] authtNames = Stream.concat(Stream.of("권한을 선택해주세요"), auths.stream().map(a -> a.getAuth_name()))
 				.toArray(String[]::new);
 		this.cb_auth.setModel(new DefaultComboBoxModel<>(authtNames));
+	}
+
+	public void setJobGrades(List<JobGrade> jobGrades) {
+		this.jobGrades = jobGrades;
+		String[] jobGradeNames = Stream.concat(Stream.of("직급을 선택해주세요"), jobGrades.stream().map(a -> a.getJobGradeName()))
+				.toArray(String[]::new);
+		this.cb_job_grade.setModel(new DefaultComboBoxModel<>(jobGradeNames));
 	}
 
 	public void setMember(Member member) {
@@ -338,12 +370,20 @@ public class MemberInfoDialog extends JDialog {
 					break;
 				}
 			}
+
+			for (int i = 0; i < this.cb_job_grade.getItemCount(); i++) {
+				if (this.cb_job_grade.getItemAt(i).equals(this.member.getJobGrade().getJobGradeName())) {
+					this.cb_job_grade.setSelectedIndex(i);
+					break;
+				}
+			}
 			this.tf_email.setText(this.member.getMember_email());
 			this.tf_hire_day.setText(this.member.getMemberhiredate().toString());
 		} else {
 			this.tf_name.setText(null);
 			this.cb_dept.setSelectedIndex(0);
 			this.cb_auth.setSelectedIndex(0);
+			this.cb_job_grade.setSelectedIndex(0);
 			this.tf_email.setText(null);
 			this.tf_hire_day.setText(null);
 		}

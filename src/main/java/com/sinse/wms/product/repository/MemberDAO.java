@@ -14,6 +14,7 @@ import com.sinse.wms.common.exception.MemberUpdateException;
 import com.sinse.wms.common.util.DBManager;
 import com.sinse.wms.product.model.Auth;
 import com.sinse.wms.product.model.Dept;
+import com.sinse.wms.product.model.JobGrade;
 import com.sinse.wms.product.model.Member;
 
 public class MemberDAO {
@@ -94,6 +95,11 @@ public class MemberDAO {
 				a.setAuth_flag(rs.getInt("auth_flag"));
 				m.setAuth(a);
 
+				JobGrade j = new JobGrade();
+				j.setJobGradeId(rs.getInt("job_grade_id"));
+				j.setJobGradeName(rs.getString("job_grade_name"));
+				m.setJobGrade(j);
+
 				list.add(m);
 			}
 		} catch (SQLException e) {
@@ -114,7 +120,7 @@ public class MemberDAO {
 		con = dbManager.getConnetion();
 
 		try {
-			String sql = "SELECT m.member_id, m.member_password, m.member_email, m.member_name, m.member_hiredate, m.dormant, d.dept_id, d.dept_name, a.auth_id, a.auth_name, a.auth_flag FROM member m INNER JOIN dept d ON m.dept_id=d.dept_id INNER JOIN auth a ON m.auth_id=a.auth_id WHERE m.member_name LIKE ? OR m.member_email LIKE ?";
+			String sql = "SELECT m.member_id, m.member_password, m.member_email, m.member_name, m.member_hiredate, m.dormant, d.dept_id, d.dept_name, a.auth_id, a.auth_name, a.auth_flag, j.job_grade_id, j.job_grade_name FROM member m INNER JOIN dept d ON m.dept_id=d.dept_id INNER JOIN auth a ON m.auth_id=a.auth_id INNER JOIN job_grade j ON m.job_grade_id=j.job_grade_id WHERE m.member_name LIKE ? OR m.member_email LIKE ?";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, "%" + keyword + "%");
 			pstmt.setString(2, "%" + keyword + "%");
@@ -139,6 +145,11 @@ public class MemberDAO {
 				a.setAuth_flag(rs.getInt("auth_flag"));
 				m.setAuth(a);
 
+				JobGrade j = new JobGrade();
+				j.setJobGradeId(rs.getInt("job_grade_id"));
+				j.setJobGradeName(rs.getString("job_grade_name"));
+				m.setJobGrade(j);
+
 				list.add(m);
 			}
 		} catch (SQLException e) {
@@ -156,13 +167,14 @@ public class MemberDAO {
 
 		con = dbManager.getConnetion();
 		try {
-			String sql = "INSERT INTO member(member_password, member_email, member_name, dept_id, auth_id) VALUES (?, ?, ?, ?, ?)";
+			String sql = "INSERT INTO member(member_password, member_email, member_name, dept_id, auth_id, job_grade_id) VALUES (?, ?, ?, ?, ?, ?)";
 			pstmt = con.prepareStatement(sql);
 			pstmt.setString(1, m.getMember_password());
 			pstmt.setString(2, m.getMember_email());
 			pstmt.setString(3, m.getMember_name());
 			pstmt.setInt(4, m.getDept().getDept_id());
 			pstmt.setInt(5, m.getAuth().getAuth_id());
+			pstmt.setInt(6, m.getJobGrade().getJobGradeId());
 			int result = pstmt.executeUpdate();
 			if (result == 0) {
 				throw new MemberInsertException("멤버 등록 실패 result : 0");

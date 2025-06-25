@@ -7,14 +7,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sinse.wms.common.exception.JobGradeSelectAllException;
 import com.sinse.wms.common.util.DBManager;
-import com.sinse.wms.product.model.Dept;
 import com.sinse.wms.product.model.JobGrade;
 
 public class JobGradeDAO {
 	private DBManager dbManager = DBManager.getInstance();
-	
-	public List<JobGrade> selectAll(){
+
+	public List<JobGrade> selectAll() throws JobGradeSelectAllException {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -36,10 +36,11 @@ public class JobGradeDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+            throw new JobGradeSelectAllException("직급 조회 실패", e);
 		} finally {
 			dbManager.release(pstmt, rs);
 		}
 		return list;
 	}
-	
+
 }
