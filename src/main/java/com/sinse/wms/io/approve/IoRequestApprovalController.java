@@ -109,7 +109,8 @@ public class IoRequestApprovalController {
             }
 
             con.commit();
-            model.clearSelections();
+	    con.setAutoCommit(true); //	transaction 종료 이후 AutoCommit 원상복구
+            model.clearSelections(); // 체크박스 원상복구
             JOptionPane.showMessageDialog(null, "요청이 반려되었습니다.");
 
         } catch (Exception e) {
