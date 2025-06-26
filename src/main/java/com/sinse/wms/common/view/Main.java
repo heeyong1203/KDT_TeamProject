@@ -106,7 +106,6 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 	private void initContents() {
 		this.cardLayout = new CardLayout();
 		this.bodyContent = new JPanel(cardLayout);
-<<<<<<< HEAD
 		this.bodyContent.add(new MainPage(Color.WHITE,m), Menu.MAIN.name());
 		this.bodyContent.add(new InboundStatusPage(Color.RED), Menu.IN_BOUND_STATUS.name());
 		this.bodyContent.add(new InboundRequestPage(Color.LIGHT_GRAY), Menu.IN_BOUND_REQUEST.name());
