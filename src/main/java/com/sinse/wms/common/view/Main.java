@@ -5,6 +5,7 @@ import java.awt.CardLayout;
 import java.awt.Color;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.sinse.wms.common.Config;
@@ -23,6 +24,7 @@ import com.sinse.wms.inventory.view.InventoryStatusPage;
 import com.sinse.wms.main.view.MainPage;
 import com.sinse.wms.membermanagement.view.MemberManagementPage;
 import com.sinse.wms.menu.help.view.HelpMenu;
+import com.sinse.wms.menu.search.view.SearchMenu;
 import com.sinse.wms.menu.setting.view.SettingMenu;
 import com.sinse.wms.mypage.view.Mypage;
 import com.sinse.wms.outbound.view.OutboundInspectionPage;
@@ -116,7 +118,6 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 		this.bodyContent.add(new Mypage(Color.white,m), Menu.MY_PAGE.name());	
 		this.bodyContent.add(new HelpMenu(), Menu.HELP.name());	//도움말 페이지
 		this.bodyContent.add(new SettingMenu(), Menu.SETTING.name());	//환경설정 페이지
-
 	}
 
 	/**
@@ -159,6 +160,18 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 	private void handleContent(Menu menu) {
 		cardLayout.show(bodyContent, menu.name());
 	}
+	
+	/**
+	 * 검색 후 페이지를 이동하는 함수
+	 */
+	public void openMenuByKey(String key) {
+        try {
+            Menu menu = Menu.valueOf(key);
+            onChangeMenu(menu);  // 화면 전환 로직 호출
+        } catch (IllegalArgumentException e) {
+            System.err.println("유효하지 않은 메뉴 키: " + key);
+        }
+    }
 
 	@Override
 	public void onClickMyPage() {
@@ -173,19 +186,19 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 
 	@Override
 	public void onClickSearch() {
-		// TODO("툴바 돋보기 아이콘 클릭시 구현");
+		//한 번만 실행
+		SearchMenu search = SearchMenu.getInstance(this);
+		search.setVisible(true);
 	}
 
 	@Override
 	public void onClickInfo() {
-		// TODO("툴바 돋보기 정보 아이콘 클릭시 구현");
 		this.cardLayout.show(this.bodyContent, Menu.HELP.name());
 		
 	}
 
 	@Override
 	public void onClickSettings() {
-		// TODO("툴바 돋보기 톱니바퀴 아이콘 클릭시 구현");
 		this.cardLayout.show(this.bodyContent, Menu.SETTING.name());
 	}
 }
