@@ -18,12 +18,11 @@ public class GetSaveFilePath {
     	
     	fileChooser.setDialogTitle("파일 저장 위치 선택");
     	int userSelection = fileChooser.showSaveDialog(null);
-    	String path = null;
 
     	if (userSelection == JFileChooser.APPROVE_OPTION) {
     	    File fileToSave = fileChooser.getSelectedFile();
-    	    path = fileToSave.getAbsolutePath();
+    	    return fileToSave.getAbsolutePath();
     	}
-    	return path;
+    	return null;
     }
 }

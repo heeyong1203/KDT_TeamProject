@@ -9,13 +9,14 @@ import java.sql.SQLException;
 import com.sinse.wms.common.Config;
 
 public class DBManager {
-
+	private Connection con;
     private static DBManager instance;
 
     private DBManager() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
+            con = DriverManager.getConnection(Config.URL, Config.USER, Config.PWD);
+        } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
         }
     }
