@@ -1,4 +1,4 @@
-package com.sinse.wms.inbound.regist;
+package com.sinse.wms.io.regist;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -22,10 +22,10 @@ import com.sinse.wms.product.repository.MemberDAO;
 import com.sinse.wms.product.repository.ProductDAO;
 import com.sinse.wms.product.repository.RequestStatusDAO;
 
-public class RegistPageController {
+public class IoRegistPageController {
 	private IoRegistPageLayout view;
 	
-	public RegistPageController(IoRegistPageLayout view) {
+	public IoRegistPageController(IoRegistPageLayout view) {
 		this.view = view;
 		setCombo();
 		
@@ -59,6 +59,7 @@ public class RegistPageController {
 			/*-- request_type --*/
 			String io_request_type = view.getCb_type().getSelectedItem().toString();
 			if (io_request_type.equals("타입을 선택하세요.")) {
+				throw new IllegalArgumentException("입출고 타입을 선택해주세요.");
 			} else if(!io_request_type.equals("입고")) {
 				throw new IllegalArgumentException("타입을 입고로 선택해주세요.");					
 			}
@@ -146,14 +147,14 @@ public class RegistPageController {
 			view = null;
 			
 		} catch (Exception e) {
-			e.printStackTrace();
 			try {
 				if(con != null) con.rollback();
 			} catch (SQLException rollbackEx){
 				rollbackEx.printStackTrace();
 			}
+			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "등록에 실패하셨습니다 : "+e.getMessage());
-		}
+		} 
 	}
 	
 	private void cancel() {

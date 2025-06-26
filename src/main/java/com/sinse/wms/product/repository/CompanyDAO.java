@@ -20,7 +20,7 @@ public class CompanyDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
-		String sql = "SELECT * FROM Company WHERE company_name = ?";
+		String sql = "SELECT * FROM company WHERE company_name = ?";
 		
 		Connection con = dbManager.getConnetion();
 		try {
@@ -36,7 +36,7 @@ public class CompanyDAO {
 			e.printStackTrace();
 		}
 		return company;
-	}  
+	}
 	
 	// select
 	public List<Company> selectAll() {

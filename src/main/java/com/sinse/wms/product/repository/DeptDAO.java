@@ -13,7 +13,7 @@ import com.sinse.wms.product.model.Dept;
 
 public class DeptDAO {
 	DBManager dbManager = DBManager.getInstance();
-
+	
 	// 전체 부서 목록 조회
 	public List<Dept> selectAll() {
 		Connection con = null;

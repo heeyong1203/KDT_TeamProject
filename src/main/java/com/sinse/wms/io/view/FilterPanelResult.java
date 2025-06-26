@@ -1,4 +1,4 @@
-package com.sinse.wms.common.view.content;
+package com.sinse.wms.io.view;
 
 import javax.swing.JPanel;
 

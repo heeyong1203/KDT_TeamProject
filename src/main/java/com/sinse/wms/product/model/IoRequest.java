@@ -14,7 +14,7 @@ public class IoRequest {
 	private Date request_at; 
 	private Date expected_date;  
 	private Member  member; //approve_member_id;
-	private Date approved_at;
+	private Date approved_at; // << null로 처리하고 승인 누르면 null -> 승인 누른 시간으로 update
 	private String remark;
 	
 	public int getIoRequest_id() {

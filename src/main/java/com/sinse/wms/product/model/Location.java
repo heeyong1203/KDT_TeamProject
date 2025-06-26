@@ -17,7 +17,4 @@ public class Location {
 	public void setLocation_name(String location_name) {
 		this.location_name = location_name;
 	}
-	
-	
-	
 }

@@ -104,7 +104,7 @@ public class ProductDAO {
 				p.setProduct_id(rs.getInt("product_id"));
 				p.setProduct_code(rs.getString("product_code"));
 				p.setProduct_name(rs.getString("product_name"));
-				p.setProduct_description(rs.getString("product_desription"));
+				p.setProduct_description(rs.getString("product_description"));
 				p.setProduct_price(rs.getInt("product_price"));
 				p.setProduct_stock(rs.getInt("product_stock"));
 				p.setRegdate(rs.getDate("product_regdate"));
