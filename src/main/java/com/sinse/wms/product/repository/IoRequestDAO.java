@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.sinse.wms.common.util.ChangeFormToDate;
 import com.sinse.wms.common.util.DBManager;
 import com.sinse.wms.product.model.Company;
 import com.sinse.wms.product.model.Dept;
@@ -271,10 +272,11 @@ public class IoRequestDAO {
         PreparedStatement pstmt = null;
 
         try {
-            String sql = "UPDATE io_request SET iorequest_type=?, product_id=?, quantity=?, location_id=?, request_member_id=?, request_reason=?, status_id=?, request_at=?, expected_date=?, approve_member_id=?, approve_at=?, remark=? "
-                       + "WHERE iorequest_id=?";
+            StringBuffer sql = null;
+            sql.append("UPDATE io_request SET io_request_type=?, product_id=?, quantity=?, location_id=?, request_member_id=?, request_reason=?, status_id=?, request_at=?, expected_date=?, approve_member_id=?, approved_at=?, remark=? ");
+            sql.append("WHERE io_request_id=?");
 
-            pstmt = con.prepareStatement(sql);
+            pstmt = con.prepareStatement(sql.toString());
             pstmt.setString(1, io.getIoRequest_type());
             pstmt.setInt(2, io.getProduct().getProduct_id());
             pstmt.setInt(3, io.getQuantity());
@@ -295,6 +297,36 @@ public class IoRequestDAO {
         } finally {
             dbManager.release(pstmt);
            
+        }
+    }
+    
+    public void update(IoRequest io, Connection con, boolean isApproved) { // true=바뀐 상태가 승인(최종상태)인지?
+        con = dbManager.getConnetion();
+        PreparedStatement pstmt = null;
+
+        try {
+            StringBuffer sql = new StringBuffer();
+            sql.append("UPDATE io_request SET ");
+            sql.append("status_id=?, ");
+            sql.append("request_at=?, ");
+            sql.append("approved_at=? ");
+            sql.append("WHERE io_request_id=?");
+
+            pstmt = con.prepareStatement(sql.toString());
+            pstmt.setInt(1, io.getStatus().getStatus_id());		// 1. 상태 ID
+            pstmt.setDate(2, ChangeFormToDate.nowDate()); 		// 2. 요청일은 항상 현재일자로 업데이트
+            if (isApproved) { 									// 3. 승인일은 진행상태가 '승인'일 때만, 아니면 null
+            	pstmt.setDate(3, ChangeFormToDate.nowDate());
+            } else {
+            	pstmt.setDate(3, null);
+            }								
+            pstmt.setInt(4, io.getIoRequest_id()); 				// 4. 조건 where절
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            dbManager.release(pstmt);
         }
     }
 
@@ -334,11 +366,11 @@ public class IoRequestDAO {
         	sql.append(" d.dept_name,");
         	sql.append(" rs.status_name");
         	sql.append(" FROM io_request ir");
-        	sql.append(" RIGHT JOIN product p ON ir.product_id = p.product_id");
-        	sql.append(" RIGHT JOIN company co ON p.company_id = co.company_id");
-        	sql.append(" RIGHT JOIN member m ON ir.request_member_id = m.member_id");
-        	sql.append(" RIGHT JOIN dept d ON m.dept_id = d.dept_id");
-        	sql.append(" RIGHT JOIN request_status rs ON ir.status_id = rs.status_id");
+        	sql.append(" LEFT JOIN product p ON ir.product_id = p.product_id");
+        	sql.append(" LEFT JOIN company co ON p.company_id = co.company_id");
+        	sql.append(" LEFT JOIN member m ON ir.request_member_id = m.member_id");
+        	sql.append(" LEFT JOIN dept d ON m.dept_id = d.dept_id");
+        	sql.append(" LEFT JOIN request_status rs ON ir.status_id = rs.status_id");
         	sql.append(" WHERE 1=1");
         	if(io_request_type != null && !io_request_type.isEmpty()) {
         		sql.append(" AND ir.io_request_type = ?");	// 입출고명 : 입고 혹은 출고
@@ -372,18 +404,18 @@ public class IoRequestDAO {
             pstmt = con.prepareStatement(sql.toString());
             int index = 1;
             if(io_request_type != null && !io_request_type.isEmpty()) {
-            	pstmt.setString(index, io_request_type); // 매개변수로 받은 상태명
+            	pstmt.setString(index++, io_request_type); // 매개변수로 받은 상태명
             }
             
             if (status_name != null && !"현황".equals(status_name) && !status_name.isEmpty()) {
-            	pstmt.setString(++index, status_name);            	
+            	pstmt.setString(index++, status_name);            	
             }
             
             if(filters != null) {
             	for(int i = 0; i < filters.size(); i++) {
             		String filter = filters.get(i);
             		if(filter != null && !filter.isEmpty()) {
-            			pstmt.setString(++index, filter);
+            			pstmt.setString(index++, filter);
             		}
             	}
             }

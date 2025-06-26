@@ -1,4 +1,4 @@
-package com.sinse.wms.common.view.content;
+package com.sinse.wms.io.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,6 +13,7 @@ import javax.swing.SwingConstants;
 import javax.swing.table.TableModel;
 
 import com.sinse.wms.common.Config;
+import com.sinse.wms.common.view.button.OutLineButton;
 
 public class LabeledComboBox extends JPanel {
 	private JLabel label;

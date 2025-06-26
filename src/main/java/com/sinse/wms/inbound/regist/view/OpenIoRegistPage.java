@@ -1,11 +1,11 @@
-package com.sinse.wms.inbound.regist;
+package com.sinse.wms.inbound.regist.view;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.JOptionPane;
 
-import com.sinse.wms.inbound.regist.view.IoRegistPageLayout;
+import com.sinse.wms.io.regist.IoRegistPageController;
 
 public class OpenIoRegistPage {
 	private IoRegistPageLayout registPage = null;
@@ -30,6 +30,6 @@ public class OpenIoRegistPage {
 		      registPage.requestFocus();
 		}
 		
-		RegistPageController controller = new RegistPageController(registPage); // 취소 선택 시 등록 창 꺼짐
+		IoRegistPageController controller = new IoRegistPageController(registPage); // 취소 선택 시 등록 창 꺼짐
 	}
 }
