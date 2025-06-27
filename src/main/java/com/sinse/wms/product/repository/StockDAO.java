@@ -272,7 +272,15 @@ public class StockDAO {
 	            stock = new Stock();
 	            stock.setStock_id(rs.getInt("stock_id"));
 	            stock.setStock_quantity(rs.getInt("stock_quantity"));
-	            // 필요 시 product, location도 설정
+	            
+	            // product, location도 설정
+	            Product product = new Product();
+	            product.setProduct_id(productId);  // 필수
+	            stock.setProduct(product);
+
+	            Location location = new Location();
+	            location.setLocation_id(locationId);  // 필수
+	            stock.setLocation(location);
 	        }
 	    } catch (SQLException e) {
 	        e.printStackTrace();

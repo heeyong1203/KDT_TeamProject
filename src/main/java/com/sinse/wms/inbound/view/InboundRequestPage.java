@@ -33,15 +33,16 @@ public class InboundRequestPage extends BaseContentPage {
 
     public InboundRequestPage(Color color) {
     	setLayout(new FlowLayout(FlowLayout.CENTER, 0, 30)); 	// 레이아웃 스타일 설정
-
+    	
 		List<IoRequest> emptyData = new ArrayList<>();
 		filterPanel = new IoFilterPanel(emptyData, status_type); // 콤보박스와 테이블을 합친 레이아웃 클래스
 	    add(filterPanel);                  						// 화면에 부착
 		add(createButtons()); 									// 버튼 부착
+		controller = new IoFilterController(filterPanel.getP_filters(), filterPanel.getTableLayout(), ioRequestType, status_type);
+		controller.loadTable();
 		
 		// 조회 이벤트 구현
 		bt_load.addActionListener(e->{
-			controller = new IoFilterController(filterPanel.getP_filters(), filterPanel.getTableLayout(), ioRequestType, status_type);
 			controller.loadTable();
 		});
 		

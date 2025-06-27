@@ -15,6 +15,7 @@ import com.sinse.wms.product.model.IoRequest;
 import com.sinse.wms.product.model.Location;
 import com.sinse.wms.product.model.Member;
 import com.sinse.wms.product.model.Product;
+import com.sinse.wms.product.model.ProductUnit;
 import com.sinse.wms.product.model.RequestStatus;
 import com.sinse.wms.product.repository.IoRequestDAO;
 import com.sinse.wms.product.repository.LocationDAO;
@@ -25,12 +26,16 @@ import com.sinse.wms.product.repository.RequestStatusDAO;
 public class IoRegistPageController {
 	private IoRegistPageLayout view;
 	private String pageIoType;
+	private ProductDAO productDAO = new ProductDAO();
+	private LocationDAO locationDAO = new LocationDAO();
+	private MemberDAO memberDAO = new MemberDAO();
 	
 	public IoRegistPageController(IoRegistPageLayout view, String pageIoType) {
 		this.view = view;
 		this.pageIoType = pageIoType;
 		setCombo();
-		
+		setUnitLabel();
+
 		// 등록 버튼 이벤트 구현
 		view.getBt_regist().addActionListener(e -> regist());
 		
@@ -80,7 +85,6 @@ public class IoRegistPageController {
 	        if ("상품을 선택하세요.".equals(selectedProductName)) {
 				throw new IllegalArgumentException("상품을 선택해주세요.");
 			}
-	        ProductDAO productDAO = new ProductDAO();
 	        Product product = productDAO.findByName(selectedProductName);
 	        ioRequest.setProduct(product);
 	        
@@ -89,7 +93,6 @@ public class IoRegistPageController {
 	        if ("위치를 선택하세요.".equals(selectedLocationName)) {
 	        	throw new IllegalArgumentException("위치를 선택해주세요.");
 	        }
-	        LocationDAO locationDAO = new LocationDAO();
 	        Location location = locationDAO.findByName(selectedLocationName);
 	        ioRequest.setLocation(location);
 	        
@@ -128,7 +131,6 @@ public class IoRegistPageController {
 	        if ("담당자를 선택하세요.".equals(selectedRequesterName)) {
 	        	throw new IllegalArgumentException("등록 요청인을 선택해주세요.");
 	        }
-	        MemberDAO memberDAO = new MemberDAO();
 	        Member requester = memberDAO.findByName(selectedRequesterName); 
 	        ioRequest.setRequest_member_id(requester);
 	        
@@ -206,4 +208,25 @@ public class IoRegistPageController {
 		view.setApproverItems(memberNames);
 
 	}
+	
+	public void setUnitLabel() {
+		view.getCb_product().addActionListener(e -> {
+		    String productName = view.getCb_product().getSelectedItem().toString();
+		    // System.out.println("[DEBUG] 선택한 상품명: " + productName);
+		    if (!"상품을 선택하세요.".equals(productName)) {
+		        Product product = productDAO.findByName(productName);
+		        // System.out.println("[DEBUG] product: " + product);
+		        // System.out.println("[DEBUG] unit: " + (product != null ? product.getUnit() : "null"));
+		        if (product != null && product.getUnit() != null) {
+		            ProductUnit unit = product.getUnit();
+		            view.getLa_unit().setText(unit.getUnit_name());
+		        } else {
+		            view.getLa_unit().setText(""); // 혹시 null일 경우 대비
+		        }
+		    } else {
+		        view.getLa_unit().setText(""); // 기본 안내 문구일 때는 비우기
+		    }
+		});
+	}
+	
 }

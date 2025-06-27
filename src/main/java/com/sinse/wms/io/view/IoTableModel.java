@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.sinse.wms.common.util.TableModel;
 import com.sinse.wms.product.model.IoRequest;
+import com.sinse.wms.product.model.Stock;
 
 public class IoTableModel extends TableModel {
 	private List<IoRequest> data;
@@ -21,9 +22,9 @@ public class IoTableModel extends TableModel {
         }
         
         if ("입고".equals(status_type)) {
-            this.columns = new String[] { "선택", "No", "품목명", "품목코드", "진행상태", "상품단가", "입고수량", "현재재고수량" };
+            this.columns = new String[] { "선택", "No", "품목명", "품목코드", "진행상태", "상품단가", "입고요청수량", "현재재고수량" };
         } else {
-            this.columns = new String[] { "선택", "No", "품목명", "품목코드", "진행상태", "상품단가", "출고수량", "현재재고수량" };
+            this.columns = new String[] { "선택", "No", "품목명", "품목코드", "진행상태", "상품단가", "출고요청수량", "현재재고수량" };
         }
     }
 
@@ -45,16 +46,19 @@ public class IoTableModel extends TableModel {
     @Override
     public Object getValueAt(int row, int col) {
         IoRequest io = data.get(row);
-        
+
         switch (col) {
             case 0 : return selected.get(row); // 체크박스 상태
             case 1 : return row + 1 ; // no 1번부터
             case 2 : return io.getProduct().getProduct_name();   // 상품명
             case 3 : return io.getProduct().getProduct_code();  // 상품 코드
             case 4 : return io.getStatus().getStatus_name();    // 진행 상태
-            case 5 : return io.getProduct().getProduct_price(); // 단가
-            case 6 : return io.getQuantity(); 	 			 	 // 입고 수량
-            case 7 : return io.getProduct().getProduct_stock(); // 재고량
+            case 5 : return io.getProduct().getProduct_price()+"원"; // 단가
+            case 6 : if("승인".equals(io.getStatus().getStatus_name()) || "반려".equals(io.getStatus().getStatus_name())) {
+            		 	return 0;
+            		 } else return io.getQuantity()+" "+io.getProduct().getUnit().getUnit_name();// 요청 수량
+
+            case 7 : return io.getProduct().getProduct_stock()+" "+io.getProduct().getUnit().getUnit_name(); // 재고량
             default : return null;
         }
     }
