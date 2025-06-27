@@ -69,6 +69,35 @@ public class CompanyDAO {
 		return list;
 	}
 
+	public List<Company> selectByName(String companyName) {
+		Connection con = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		ArrayList<Company> list = new ArrayList<>();
+
+		con = dbManager.getConnetion();
+
+		try {
+			StringBuffer sql = new StringBuffer();
+			sql.append("SELECT * FROM company WHERE company_name LIKE ?");
+			pstmt = con.prepareStatement(sql.toString());
+			pstmt.setString(1, companyName + "%");
+			rs = pstmt.executeQuery();
+
+			while (rs.next()) {
+				Company company = new Company();
+				company.setCompany_id(rs.getInt("company_id"));
+				company.setCompany_name(rs.getString("company_name"));
+				list.add(company);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			dbManager.release(pstmt, rs);
+		}
+		return list;
+	}
+
 	// insert
 	public void insert(Company company) {
 		Connection con = null;

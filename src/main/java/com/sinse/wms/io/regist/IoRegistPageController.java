@@ -239,8 +239,4 @@ public class IoRegistPageController {
 		    }
 		});
 	}
-	
-	public void setProductSnapshot() {
-		
-	}
 }

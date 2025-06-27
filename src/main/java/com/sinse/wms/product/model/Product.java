@@ -14,6 +14,7 @@ public class Product {
 	private Company company;
 	private Location location;
 	private ProductUnit unit;
+	private int image_id;
 	
 	
 	public int getProduct_id() {
@@ -81,6 +82,12 @@ public class Product {
 	}
 	public void setUnit(ProductUnit unit) {
 		this.unit = unit;
+	}
+	public int getImage_id() {
+		return image_id;
+	}
+	public void setImage_id(int image_id) {
+		this.image_id = image_id;
 	}
 	
 }
