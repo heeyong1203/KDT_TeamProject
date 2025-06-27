@@ -17,10 +17,10 @@ import javax.swing.JPanel;
 import com.sinse.wms.common.Config;
 import com.sinse.wms.common.view.button.OutLineButton;
 import com.sinse.wms.common.view.content.BaseContentPage;
-import com.sinse.wms.inbound.regist.view.IoRegistPageLayout;
-import com.sinse.wms.inbound.regist.view.OpenIoRegistPage;
 import com.sinse.wms.io.approve.IoRequestApprovalController;
 import com.sinse.wms.io.regist.IoRegistPageController;
+import com.sinse.wms.io.regist.view.IoRegistPageLayout;
+import com.sinse.wms.io.regist.view.IoRegistPageLauncher;
 import com.sinse.wms.io.util.IoFilterController;
 import com.sinse.wms.io.view.IoFilterPanel;
 import com.sinse.wms.product.model.IoRequest;
@@ -52,9 +52,10 @@ public class OutboundRequestPage extends BaseContentPage {
         bt_regist.addMouseListener(new MouseAdapter() {
         	public void mouseReleased(MouseEvent e) {
         		IoRegistPageLayout page = new IoRegistPageLayout(statusName);
-                new IoRegistPageController(page); // controller 생성 시 내부에서 버튼 이벤트 연결
+                new IoRegistPageController(page, ioRequestType); // controller 생성 시 내부에서 버튼 이벤트 연결
                 page.setLocationRelativeTo(null);
                 page.setVisible(true);
+                controller.loadTable(); // 테이블 최신화
         	};
         });
         
@@ -62,11 +63,13 @@ public class OutboundRequestPage extends BaseContentPage {
         bt_approved.addMouseListener(new MouseAdapter() {
         	public void mouseReleased(MouseEvent e) {
         		new IoRequestApprovalController(filterPanel).approveRequest();
+        		controller.loadTable(); // 테이블 최신화
         	}
         });
         bt_denied.addMouseListener(new MouseAdapter() {
         	public void mouseReleased(MouseEvent e) {
         		new IoRequestApprovalController(filterPanel).denyRequests();
+        		controller.loadTable(); // 테이블 최신화
         	}
 		});   
     }

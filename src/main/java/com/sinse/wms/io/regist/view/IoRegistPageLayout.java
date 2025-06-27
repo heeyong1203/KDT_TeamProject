@@ -1,4 +1,4 @@
-package com.sinse.wms.inbound.regist.view;
+package com.sinse.wms.io.regist.view;
 
 import java.awt.Color;
 import java.awt.Dimension;

@@ -8,11 +8,13 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.sinse.wms.common.Config;
 import com.sinse.wms.common.view.button.OutLineButton;
 import com.sinse.wms.common.view.content.BaseContentPage;
+import com.sinse.wms.io.delete.IoDeleteController;
 import com.sinse.wms.io.util.IoFilterController;
 import com.sinse.wms.io.view.IoFilterPanel;
 import com.sinse.wms.product.model.IoRequest;
@@ -39,6 +41,23 @@ public class InboundStatusPage extends BaseContentPage {
 				controller = new IoFilterController(filterPanel.getP_filters(), filterPanel.getTableLayout(), ioRequestType, statusName);
 				controller.loadTable();
 			}
+		});
+		
+		// 삭제 이벤트 구현
+		bt_delete.addMouseListener(new MouseAdapter() {
+			public void mouseReleased(MouseEvent e) {
+				int result = JOptionPane.showConfirmDialog(
+		            null,
+		            "정말 삭제하시겠습니까?",
+		            "삭제 확인",
+		            JOptionPane.YES_NO_OPTION
+		        );
+
+		        if (result == JOptionPane.YES_OPTION) {
+		            new IoDeleteController(filterPanel).delete();
+		            controller.loadTable();
+		        }
+		    }
 		});
 	}
 

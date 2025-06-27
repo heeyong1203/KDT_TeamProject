@@ -266,7 +266,7 @@ public class IoRequestDAO {
         }
     }
 
-    // 입출고 요청 수정
+    // 입출고 요청 전체 데이터 수정
     public void update(IoRequest io) {
         Connection con = dbManager.getConnetion();
         PreparedStatement pstmt = null;
@@ -300,8 +300,8 @@ public class IoRequestDAO {
         }
     }
     
+    // 입출고 요청 업데이트
     public void update(IoRequest io, Connection con, boolean isApproved) { // true=바뀐 상태가 승인(최종상태)인지?
-        con = dbManager.getConnetion();
         PreparedStatement pstmt = null;
 
         try {
@@ -331,20 +331,18 @@ public class IoRequestDAO {
     }
 
     // 입출고 요청 삭제
-    public void delete(int iorequestId) {
-        Connection con = dbManager.getConnetion();
+    public void delete(int io_request_id, Connection con) {
         PreparedStatement pstmt = null;
 
         try {
-            String sql = "DELETE FROM io_request WHERE iorequest_id = ?";
+            String sql = "DELETE FROM io_request WHERE io_request_id = ?";
             pstmt = con.prepareStatement(sql);
-            pstmt.setInt(1, iorequestId);
+            pstmt.setInt(1, io_request_id);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             dbManager.release(pstmt);
-           
         }
     }
 

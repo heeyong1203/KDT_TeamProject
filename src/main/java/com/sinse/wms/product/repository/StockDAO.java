@@ -255,12 +255,36 @@ public class StockDAO {
 		return list;
 	}
 	
-	// 재고 추가
-	public void insert(Stock stock) {
-		Connection con = null;
-		PreparedStatement pstmt = null;
+	// 상품, 위치로 재고 찾기
+	public Stock findByProductAndLocation(int productId, int locationId, Connection con) {
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    Stock stock = null;
 
-		con = dbManager.getConnetion();
+	    try {
+	        String sql = "SELECT * FROM stock WHERE product_id = ? AND location_id = ?";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setInt(1, productId);
+	        pstmt.setInt(2, locationId);
+	        rs = pstmt.executeQuery();
+
+	        if (rs.next()) {
+	            stock = new Stock();
+	            stock.setStock_id(rs.getInt("stock_id"));
+	            stock.setStock_quantity(rs.getInt("stock_quantity"));
+	            // 필요 시 product, location도 설정
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        dbManager.release(pstmt, rs);
+	    }
+	    return stock;
+	}
+	
+	// 재고 추가
+	public void insert(Stock stock, Connection con) {
+		PreparedStatement pstmt = null;
 
 		try {
 			StringBuffer sql = new StringBuffer();
@@ -278,11 +302,8 @@ public class StockDAO {
 	}
 
 	// 재고 수정
-	public void update(Stock stock) {
-		Connection con = null;
+	public void update(Stock stock, Connection con) {
 		PreparedStatement pstmt = null;
-
-		con = dbManager.getConnetion();
 
 		try {
 			StringBuffer sql = new StringBuffer();

@@ -44,11 +44,13 @@ public class OutboundInspectionPage extends BaseContentPage {
         bt_approved.addMouseListener(new MouseAdapter() {
         	public void mouseReleased(MouseEvent e) {
         		new IoRequestApprovalController(filterPanel).approveRequest();
+        		controller.loadTable(); // 테이블 최신화
         	}
         });
         bt_denied.addMouseListener(new MouseAdapter() {
         	public void mouseReleased(MouseEvent e) {
         		new IoRequestApprovalController(filterPanel).denyRequests();
+        		controller.loadTable(); // 테이블 최신화
         	}
 		});
 	}

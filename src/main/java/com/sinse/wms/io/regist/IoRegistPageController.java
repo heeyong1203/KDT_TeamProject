@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 
 import com.sinse.wms.common.util.ChangeFormToDate;
 import com.sinse.wms.common.util.DBManager;
-import com.sinse.wms.inbound.regist.view.IoRegistPageLayout;
+import com.sinse.wms.io.regist.view.IoRegistPageLayout;
 import com.sinse.wms.product.model.IoRequest;
 import com.sinse.wms.product.model.Location;
 import com.sinse.wms.product.model.Member;
@@ -24,9 +24,11 @@ import com.sinse.wms.product.repository.RequestStatusDAO;
 
 public class IoRegistPageController {
 	private IoRegistPageLayout view;
+	private String pageIoType;
 	
-	public IoRegistPageController(IoRegistPageLayout view) {
+	public IoRegistPageController(IoRegistPageLayout view, String pageIoType) {
 		this.view = view;
+		this.pageIoType = pageIoType;
 		setCombo();
 		
 		// 등록 버튼 이벤트 구현
@@ -58,16 +60,24 @@ public class IoRegistPageController {
 			
 			/*-- request_type --*/
 			String io_request_type = view.getCb_type().getSelectedItem().toString();
-			if (io_request_type.equals("타입을 선택하세요.")) {
+			
+			if ("타입을 선택하세요.".equals(io_request_type)) {
 				throw new IllegalArgumentException("입출고 타입을 선택해주세요.");
-			} else if(!io_request_type.equals("입고")) {
-				throw new IllegalArgumentException("타입을 입고로 선택해주세요.");					
+			} 
+			
+			if("입고".equals(pageIoType) || "출고".equals(pageIoType)) {
+				if(!io_request_type.equals(pageIoType)) {
+					throw new IllegalArgumentException("타입을 " + pageIoType + "로 선택해주세요."); // 입고
+				} else {
+					ioRequest.setIoRequest_type(io_request_type);
+				}
+			}else {
+				throw new IllegalArgumentException("알 수 없는 입출고 타입입니다: " + pageIoType);
 			}
-	        ioRequest.setIoRequest_type(io_request_type);
 	        
 	        /*-- product --*/
 	        String selectedProductName = view.getCb_product().getSelectedItem().toString();
-	        if (selectedProductName.equals("상품을 선택하세요.")) {
+	        if ("상품을 선택하세요.".equals(selectedProductName)) {
 				throw new IllegalArgumentException("상품을 선택해주세요.");
 			}
 	        ProductDAO productDAO = new ProductDAO();
@@ -76,7 +86,7 @@ public class IoRegistPageController {
 	        
 	        /*-- location --*/
 	        String selectedLocationName = view.getCb_location().getSelectedItem().toString();
-	        if (selectedLocationName.equals("위치를 선택하세요.")) {
+	        if ("위치를 선택하세요.".equals(selectedLocationName)) {
 	        	throw new IllegalArgumentException("위치를 선택해주세요.");
 	        }
 	        LocationDAO locationDAO = new LocationDAO();
@@ -85,6 +95,7 @@ public class IoRegistPageController {
 	        
 	        /*-- quantity --*/
 	        String quantityText = view.getT_quantity().getText();
+	        int stock = product.getProduct_stock();
 	        if (quantityText == null || quantityText.trim().isEmpty()) {
 	        	throw new IllegalArgumentException("수량을 입력해주세요.");
 	        }
@@ -94,7 +105,16 @@ public class IoRegistPageController {
 	        } catch (NumberFormatException e) {
 	            throw new IllegalArgumentException("수량은 숫자만 입력해주세요.");
 	        }
-	        ioRequest.setQuantity(quantity); 
+	        
+	        if("출고".equals(pageIoType)) {
+	        	if(quantity>stock) {
+	        		throw new IllegalArgumentException("출고수량이 재고량보다 많습니다.");
+	        	} ioRequest.setQuantity(quantity); 	        	
+	        } else if ("입고".equals(pageIoType)) {
+	        	ioRequest.setQuantity(quantity);
+	        } else {
+	            throw new IllegalArgumentException("알 수 없는 입출고 타입입니다.");
+	        }
 	        
 	        /*-- request_reason --*/
 	        String reason = view.getArea_registReason().getText();
@@ -105,19 +125,19 @@ public class IoRegistPageController {
 	        
 	        /*-- requester --*/
 	        String selectedRequesterName = view.getCb_requester().getSelectedItem().toString();
-	        if (selectedRequesterName.equals("담당자를 선택하세요.")) {
+	        if ("담당자를 선택하세요.".equals(selectedRequesterName)) {
 	        	throw new IllegalArgumentException("등록 요청인을 선택해주세요.");
 	        }
-	        MemberDAO MemberDAO = new MemberDAO();
-	        Member requester = MemberDAO.findByName(selectedRequesterName); 
+	        MemberDAO memberDAO = new MemberDAO();
+	        Member requester = memberDAO.findByName(selectedRequesterName); 
 	        ioRequest.setRequest_member_id(requester);
 	        
 	        /*-- approver --*/
 	        String selectedApproverName = view.getCb_approver().getSelectedItem().toString();
-	        if (selectedApproverName.equals("담당자를 선택하세요.")) {
+	        if ("담당자를 선택하세요.".equals(selectedApproverName)) {
 	        	throw new IllegalArgumentException("승인 관리인을 선택해주세요.");
 	        }
-	        Member approver = MemberDAO.findByName(selectedApproverName); 
+	        Member approver = memberDAO.findByName(selectedApproverName); 
 	        ioRequest.setMember(approver);
 	        
 	        
