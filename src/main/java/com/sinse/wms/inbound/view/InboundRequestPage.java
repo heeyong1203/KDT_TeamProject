@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JDialog;
@@ -64,6 +65,7 @@ public class InboundRequestPage extends BaseContentPage {
         		controller.loadTable(); // 테이블 최신화
         	}
         });
+        
         bt_denied.addMouseListener(new MouseAdapter() {
         	public void mouseReleased(MouseEvent e) {
         		new IoRequestApprovalController(filterPanel).denyRequests();
@@ -71,6 +73,7 @@ public class InboundRequestPage extends BaseContentPage {
         	}
 		});   
     }
+    
     
     /*------------------------------------------------
       버튼 생성 함수
@@ -82,11 +85,13 @@ public class InboundRequestPage extends BaseContentPage {
 	  	p_bt.setOpaque(false);
 	
 	  	bt_load = new OutLineButton("조회", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
+	  	bt_load = new OutLineButton("조회", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
 		bt_regist = new OutLineButton("단일등록", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
 		bt_registAll = new OutLineButton("일괄등록", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
 		bt_approved = new OutLineButton("요청수락", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
 		bt_denied = new OutLineButton("요청거절", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
 		
+		p_bt.add(bt_load); // 버튼 붙이기
 		p_bt.add(bt_load); // 버튼 붙이기
 		p_bt.add(bt_regist);
 		p_bt.add(bt_registAll);

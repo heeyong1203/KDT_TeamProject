@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sinse.wms.common.util.ChangeFormToDate;
+import com.sinse.wms.common.util.ChangeFormToDate;
 import com.sinse.wms.common.util.DBManager;
 import com.sinse.wms.product.model.Company;
 import com.sinse.wms.product.model.Dept;
@@ -277,6 +278,7 @@ public class IoRequestDAO {
             sql.append("UPDATE io_request SET io_request_type=?, product_id=?, quantity=?, location_id=?, request_member_id=?, request_reason=?, status_id=?, request_at=?, expected_date=?, approve_member_id=?, approved_at=?, remark=? ");
             sql.append("WHERE io_request_id=?");
 
+            pstmt = con.prepareStatement(sql.toString());
             pstmt = con.prepareStatement(sql.toString());
             pstmt.setString(1, io.getIoRequest_type());
             pstmt.setInt(2, io.getProduct().getProduct_id());
