@@ -35,5 +35,6 @@ public enum Menu {
 	ADD_REQUEST,
 	MY_PAGE,
 	HELP,
-	SETTING
+	SETTING,
+	CHAT
 }

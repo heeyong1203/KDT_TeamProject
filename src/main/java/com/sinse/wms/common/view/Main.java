@@ -128,6 +128,9 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 		this.bodyContent.add(new Mypage(Color.white,m), Menu.MY_PAGE.name());	
 		this.bodyContent.add(new HelpMenu(), Menu.HELP.name());	//도움말 페이지
 		this.bodyContent.add(new SettingMenu(), Menu.SETTING.name());	//환경설정 페이지
+		this.bodyContent.add(new Chat(),Menu.CHAT.name());
+
+
 	}
 
     /**
@@ -190,11 +193,11 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
         this.cardLayout.show(this.bodyContent, Menu.MY_PAGE.name());
     }
 
-    @Override
-    public void onClickMessageBox() {
-        // TODO("툴바 메시지 아이콘 클릭시 구현");
-    }
-
+	@Override
+	public void onClickMessageBox() {
+		// TODO("툴바 메시지 아이콘 클릭시 구현");
+		this.cardLayout.show(this.bodyContent,Menu.CHAT.name());
+	}
 	@Override
 	public void onClickSearch() {
 		//한 번만 실행
@@ -212,4 +215,6 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 	public void onClickSettings() {
 		this.cardLayout.show(this.bodyContent, Menu.SETTING.name());
 	}
+	
+	
 }

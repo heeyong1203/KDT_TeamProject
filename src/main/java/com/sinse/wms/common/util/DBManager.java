@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import com.sinse.wms.common.Config;
 
 public class DBManager {
+
 	private Connection con;
     private static DBManager instance;
 
@@ -17,6 +18,7 @@ public class DBManager {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection(Config.URL, Config.USER, Config.PWD);
         } catch (ClassNotFoundException | SQLException e) {
+
             e.printStackTrace();
         }
     }
@@ -32,7 +34,6 @@ public class DBManager {
     public Connection getConnetion() {
 		return con;
 	}
-
 
     // 💨 DML용 release
     public void release(PreparedStatement pstmt) {
