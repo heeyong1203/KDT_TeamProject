@@ -15,12 +15,14 @@ import com.sinse.wms.product.model.IoRequest;
 import com.sinse.wms.product.model.Location;
 import com.sinse.wms.product.model.Member;
 import com.sinse.wms.product.model.Product;
+import com.sinse.wms.product.model.ProductSnapshot;
 import com.sinse.wms.product.model.ProductUnit;
 import com.sinse.wms.product.model.RequestStatus;
 import com.sinse.wms.product.repository.IoRequestDAO;
 import com.sinse.wms.product.repository.LocationDAO;
 import com.sinse.wms.product.repository.MemberDAO;
 import com.sinse.wms.product.repository.ProductDAO;
+import com.sinse.wms.product.repository.ProductSnapshotDAO;
 import com.sinse.wms.product.repository.RequestStatusDAO;
 
 public class IoRegistPageController {
@@ -29,6 +31,7 @@ public class IoRegistPageController {
 	private ProductDAO productDAO = new ProductDAO();
 	private LocationDAO locationDAO = new LocationDAO();
 	private MemberDAO memberDAO = new MemberDAO();
+	private ProductSnapshotDAO productSnapshotDAO = new ProductSnapshotDAO();
 	
 	public IoRegistPageController(IoRegistPageLayout view, String pageIoType) {
 
@@ -163,7 +166,14 @@ public class IoRegistPageController {
 	        
 	        /*-- 등록! --*/
 	        ioRequestDAO.insert(ioRequest, con);
-        
+	        
+	        /*--- 등록 완료와 동시에 상품 가격 history 등록 ---*/
+	        ProductSnapshot snap = new ProductSnapshot();
+	        snap.setProduct_snapshot_id(ioRequest.getIoRequest_id());
+	        snap.setProduct_name(selectedProductName);
+	        snap.setProduct_price(product.getProduct_price());
+	        productSnapshotDAO.insert(snap, con);
+	                
 			con.commit();// 모두 성공했을 시
 			JOptionPane.showMessageDialog(null, "등록이 완료되었습니다.");
 			view.dispose();
@@ -230,4 +240,7 @@ public class IoRegistPageController {
 		});
 	}
 	
+	public void setProductSnapshot() {
+		
+	}
 }

@@ -17,7 +17,7 @@ public class Auth {
 	public void setAuth_name(String auth_name) {
 		this.auth_name = auth_name;
 	}
-	public int isAuth_flag() {
+	public int getAuth_flag() {
 		return auth_flag;
 	}
 	public void setAuth_flag(int auth_flag) {
