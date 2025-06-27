@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.sinse.wms.common.util.TableModel;
 import com.sinse.wms.product.model.IoRequest;
-import com.sinse.wms.product.model.Stock;
+
 
 public class IoTableModel extends TableModel {
 	private List<IoRequest> data;
@@ -25,6 +25,7 @@ public class IoTableModel extends TableModel {
             this.columns = new String[] { "선택", "No", "품목명", "품목코드", "진행상태", "상품단가", "입고요청수량", "현재재고수량" };
         } else {
             this.columns = new String[] { "선택", "No", "품목명", "품목코드", "진행상태", "상품단가", "출고요청수량", "현재재고수량" };
+
         }
     }
 
@@ -57,7 +58,6 @@ public class IoTableModel extends TableModel {
             case 6 : if("승인".equals(io.getStatus().getStatus_name()) || "반려".equals(io.getStatus().getStatus_name())) {
             		 	return 0;
             		 } else return io.getQuantity()+" "+io.getProduct().getUnit().getUnit_name();// 요청 수량
-
             case 7 : return io.getProduct().getProduct_stock()+" "+io.getProduct().getUnit().getUnit_name(); // 재고량
             default : return null;
         }

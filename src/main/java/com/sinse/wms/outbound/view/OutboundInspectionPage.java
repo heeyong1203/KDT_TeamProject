@@ -77,19 +77,4 @@ public class OutboundInspectionPage extends BaseContentPage {
 
 		return p_bt;
 	}
-
-	/*------------------------------------------------
-	  입고요청 승인
-	private void approve() {    	
-		// 선택한 레코드 List에 담기
-		List<IoRequest> selectedRow = new ArrayList();
-		for (int i = 0; i < ioTableModel.getRowCount(); i++) {
-			Boolean checked = (Boolean) ioTableModel.getValueAt(i, 0);
-			if(Boolean.TRUE.equals(checked)) {
-				selectedRow.add(rawData.get(i));
-				System.out.println("내가 선택한 레코드는 "+i+"번 째 레코드");
-			}
-		}
-	}
-	------------------------------------------------*/
 }

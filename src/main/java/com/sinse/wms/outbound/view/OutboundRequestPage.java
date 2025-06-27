@@ -5,13 +5,10 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.sinse.wms.common.Config;
@@ -20,7 +17,6 @@ import com.sinse.wms.common.view.content.BaseContentPage;
 import com.sinse.wms.io.approve.IoRequestApprovalController;
 import com.sinse.wms.io.regist.IoRegistPageController;
 import com.sinse.wms.io.regist.view.IoRegistPageLayout;
-import com.sinse.wms.io.regist.view.IoRegistPageLauncher;
 import com.sinse.wms.io.util.IoFilterController;
 import com.sinse.wms.io.view.IoFilterPanel;
 import com.sinse.wms.product.model.IoRequest;
@@ -70,6 +66,7 @@ public class OutboundRequestPage extends BaseContentPage {
         	public void mouseReleased(MouseEvent e) {
         		new IoRequestApprovalController(filterPanel).denyRequests();
         		controller.loadTable(); // 테이블 최신화
+
         	}
 		});   
     }

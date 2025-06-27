@@ -161,8 +161,8 @@ public class IoRegistPageLayout extends JDialog {
 
 		setTitle("등록");
 		setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
-		setPreferredSize(new Dimension(350, 490));
-		setSize(new Dimension(350, 490));
+		setPreferredSize(new Dimension(350, 520));
+		setSize(new Dimension(350, 520));
 		setVisible(true);
 	}
 	

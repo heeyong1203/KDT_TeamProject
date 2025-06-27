@@ -31,6 +31,7 @@ public class IoRegistPageController {
 	private MemberDAO memberDAO = new MemberDAO();
 	
 	public IoRegistPageController(IoRegistPageLayout view, String pageIoType) {
+
 		this.view = view;
 		this.pageIoType = pageIoType;
 		setCombo();
@@ -65,7 +66,6 @@ public class IoRegistPageController {
 			
 			/*-- request_type --*/
 			String io_request_type = view.getCb_type().getSelectedItem().toString();
-			
 			if ("타입을 선택하세요.".equals(io_request_type)) {
 				throw new IllegalArgumentException("입출고 타입을 선택해주세요.");
 			} 
@@ -78,6 +78,7 @@ public class IoRegistPageController {
 				}
 			}else {
 				throw new IllegalArgumentException("알 수 없는 입출고 타입입니다: " + pageIoType);
+
 			}
 	        
 	        /*-- product --*/

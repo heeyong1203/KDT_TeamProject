@@ -76,10 +76,14 @@ public class InboundStatusPage extends BaseContentPage {
 		bt_export = new OutLineButton("내보내기", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
 
 		p_bt.add(bt_load); // 버튼 붙이기
+
+		p_bt.add(bt_load); // 버튼 붙이기
 		p_bt.add(bt_delete);
 		p_bt.add(bt_export);
 
+
 		add(p_bt);
+
 
 		return p_bt;
 	}

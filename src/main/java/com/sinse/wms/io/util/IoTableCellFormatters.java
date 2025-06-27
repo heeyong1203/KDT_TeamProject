@@ -27,9 +27,14 @@ public class IoTableCellFormatters {
                         super.setValue(nf.format(num));
                     }
             	} else {
-                	setHorizontalAlignment(SwingConstants.CENTER); 			  // 텍스트는 중앙 정렬
-                    super.setValue(value);
-                }
+	                setHorizontalAlignment(SwingConstants.RIGHT);				  // 숫자는 우측 정렬
+	                if (value instanceof Number) {
+	                    super.setValue(nf.format(value));
+	                } else {
+	                	setHorizontalAlignment(SwingConstants.CENTER); 			  // 텍스트는 중앙 정렬
+	                    super.setValue(value);
+	                }
+            	}
             }
         };
     }
