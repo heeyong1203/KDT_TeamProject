@@ -12,6 +12,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.sinse.wms.common.Config;
+import com.sinse.wms.common.util.ExcelFileExport;
+import com.sinse.wms.common.util.GetSaveFilePath;
 import com.sinse.wms.common.view.button.OutLineButton;
 import com.sinse.wms.common.view.content.BaseContentPage;
 import com.sinse.wms.io.delete.IoDeleteController;
@@ -59,6 +61,19 @@ public class InboundStatusPage extends BaseContentPage {
 		        }
 		    }
 		});
+		
+		// excel파일로 내보내기 이벤트 구현
+		bt_export.addMouseListener(new MouseAdapter() {
+			public void mouseReleased(MouseEvent e) {
+				String path = GetSaveFilePath.saveFilePath();
+				List<String> columns = new ArrayList<>();
+				for(int i = 0; i < filterPanel.getIoTableModel().getColumnCount(); i++) {
+					columns.add(filterPanel.getIoTableModel().getColumnName(i)); 
+				}
+				String msg = ExcelFileExport.exportToExcel(columns, filterPanel.getIoTableModel(), path);
+				JOptionPane.showMessageDialog(null, msg);
+			}
+		});
 	}
 
 	/*------------------------------------------------
@@ -74,8 +89,6 @@ public class InboundStatusPage extends BaseContentPage {
 		bt_load = new OutLineButton("조회", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
 		bt_delete = new OutLineButton("삭제", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
 		bt_export = new OutLineButton("내보내기", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
-
-		p_bt.add(bt_load); // 버튼 붙이기
 
 		p_bt.add(bt_load); // 버튼 붙이기
 		p_bt.add(bt_delete);

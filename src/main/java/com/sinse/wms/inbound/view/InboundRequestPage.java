@@ -92,7 +92,6 @@ public class InboundRequestPage extends BaseContentPage {
 		bt_denied = new OutLineButton("요청거절", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
 		
 		p_bt.add(bt_load); // 버튼 붙이기
-		p_bt.add(bt_load); // 버튼 붙이기
 		p_bt.add(bt_regist);
 		p_bt.add(bt_registAll);
 		p_bt.add(bt_approved);

@@ -12,6 +12,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.sinse.wms.common.Config;
+import com.sinse.wms.common.util.ExcelFileExport;
+import com.sinse.wms.common.util.GetSaveFilePath;
 import com.sinse.wms.common.view.button.OutLineButton;
 import com.sinse.wms.common.view.content.BaseContentPage;
 import com.sinse.wms.io.delete.IoDeleteController;
@@ -58,6 +60,19 @@ public class OutboundStatusPage extends BaseContentPage {
 		            controller.loadTable();
 		        }
 		    }
+		});
+		
+		// excel파일로 내보내기 이벤트 구현
+		bt_export.addMouseListener(new MouseAdapter() {
+			public void mouseReleased(MouseEvent e) {
+				String path = GetSaveFilePath.saveFilePath();
+				List<String> columns = new ArrayList<>();
+				for(int i = 0; i < filterPanel.getIoTableModel().getColumnCount(); i++) {
+					columns.add(filterPanel.getIoTableModel().getColumnName(i)); 
+				}
+				String msg = ExcelFileExport.exportToExcel(columns, filterPanel.getIoTableModel(), path);
+				JOptionPane.showMessageDialog(null, msg);
+			}
 		});
 	}
 
