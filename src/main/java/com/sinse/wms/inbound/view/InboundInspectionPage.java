@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JPanel;
@@ -13,6 +14,9 @@ import javax.swing.JPanel;
 import com.sinse.wms.common.Config;
 import com.sinse.wms.common.view.button.OutLineButton;
 import com.sinse.wms.common.view.content.BaseContentPage;
+import com.sinse.wms.io.approve.IoRequestApprovalController;
+import com.sinse.wms.io.util.IoFilterController;
+import com.sinse.wms.io.view.IoFilterPanel;
 import com.sinse.wms.io.approve.IoRequestApprovalController;
 import com.sinse.wms.io.util.IoFilterController;
 import com.sinse.wms.io.view.IoFilterPanel;
@@ -25,7 +29,7 @@ public class InboundInspectionPage extends BaseContentPage {
 	private IoFilterPanel filterPanel;
 	private OutLineButton bt_load, bt_approved, bt_denied;
 	private IoFilterController controller;
-
+	
 	public InboundInspectionPage(Color color) {
 		setLayout(new FlowLayout(FlowLayout.CENTER, 0, 30)); 	// 레이아웃 스타일 설정
 
@@ -44,11 +48,13 @@ public class InboundInspectionPage extends BaseContentPage {
         bt_approved.addMouseListener(new MouseAdapter() {
         	public void mouseReleased(MouseEvent e) {
         		new IoRequestApprovalController(filterPanel).approveRequest();
+        		controller.loadTable(); // 테이블 최신화
         	}
         });
         bt_denied.addMouseListener(new MouseAdapter() {
         	public void mouseReleased(MouseEvent e) {
         		new IoRequestApprovalController(filterPanel).denyRequests();
+        		controller.loadTable(); // 테이블 최신화
         	}
 		});
 	}
@@ -68,10 +74,13 @@ public class InboundInspectionPage extends BaseContentPage {
 		bt_denied = new OutLineButton("요청거절", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
 
 		p_bt.add(bt_load); // 버튼 붙이기
+
+		p_bt.add(bt_load); // 버튼 붙이기
 		p_bt.add(bt_approved);
 		p_bt.add(bt_denied);
 
 		add(p_bt);
+
 
 		return p_bt;
 	}

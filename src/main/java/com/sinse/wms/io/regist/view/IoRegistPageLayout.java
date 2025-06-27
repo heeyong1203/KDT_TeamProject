@@ -1,4 +1,4 @@
-package com.sinse.wms.inbound.regist.view;
+package com.sinse.wms.io.regist.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -14,13 +14,22 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.LineBorder;
 
 import com.sinse.wms.common.Config;
 import com.sinse.wms.common.view.button.OutLineButton;
 
 public class IoRegistPageLayout extends JDialog {
-	private JLabel la_type, la_product, la_location, la_quantity, la_registReason, la_expected_date, la_requester, la_approver, la_remark;
+	private JLabel la_type, la_product, la_location, la_quantity, la_unit_title, la_unit, la_registReason, la_expected_date, la_requester, la_approver, la_remark;
 	private JComboBox<String> cb_type, cb_product, cb_location, cb_requester, cb_approver;
+	public JLabel getLa_unit() {
+		return la_unit;
+	}
+
+	public void setLa_unit(JLabel la_unit) {
+		this.la_unit = la_unit;
+	}
+
 	private JTextField t_quantity, t_expected_date;
 	private JTextArea area_registReason, area_remark;
 	private JScrollPane scroll_registReason, scroll_remark;
@@ -38,6 +47,8 @@ public class IoRegistPageLayout extends JDialog {
 		la_product = new JLabel("상품 선택");
 		la_location = new JLabel("창고 선택");
 		la_quantity = new JLabel("수량 입력");
+		la_unit_title = new JLabel("수량 단위");
+		la_unit = new JLabel("");
 		la_registReason = new JLabel("입출고 사유");
 		la_requester = new JLabel("등록 요청인");
 		la_approver = new JLabel("승인 관리인");
@@ -114,6 +125,10 @@ public class IoRegistPageLayout extends JDialog {
 		cb_type.setPreferredSize(d2);
 		cb_product.setPreferredSize(d2);
 		cb_location.setPreferredSize(d2);
+		la_unit_title.setPreferredSize(d);
+		la_unit.setPreferredSize(d2);
+		la_unit.setBackground(Color.WHITE);
+		la_unit.setBorder(new LineBorder(Color.GRAY));
 		cb_requester.setPreferredSize(d2);
 		cb_approver.setPreferredSize(d2);
 		t_expected_date.setPreferredSize(d2);
@@ -131,6 +146,8 @@ public class IoRegistPageLayout extends JDialog {
 		add(cb_location);
 		add(la_quantity);
 		add(t_quantity);
+		add(la_unit_title);
+		add(la_unit);
 		add(la_registReason);
 		add(scroll_registReason);
 		add(la_requester);
@@ -144,8 +161,8 @@ public class IoRegistPageLayout extends JDialog {
 
 		setTitle("등록");
 		setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
-		setPreferredSize(new Dimension(320, 490));
-		setSize(new Dimension(320, 490));
+		setPreferredSize(new Dimension(350, 520));
+		setSize(new Dimension(350, 520));
 		setVisible(true);
 	}
 	
