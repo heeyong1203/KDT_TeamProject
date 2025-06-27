@@ -17,7 +17,6 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 
 import com.sinse.wms.common.Config;
-import com.sinse.wms.common.util.CalendarPopUp;
 import com.sinse.wms.common.view.button.OutLineButton;
 
 public class IoRegistPageLayout extends JDialog {
@@ -60,7 +59,18 @@ public class IoRegistPageLayout extends JDialog {
 		cb_location = new JComboBox<>();
 		cb_requester = new JComboBox<>();
 		cb_approver = new JComboBox<>();
-		t_expected_date = new JTextField();
+		t_expected_date = new JTextField() {
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				if(getText().isEmpty()) {
+					Graphics2D g2 = (Graphics2D) g.create();
+					g2.setBackground(Color.LIGHT_GRAY);
+					g2.drawString("yyyy-mm-dd 00:00:00", 5, 17);
+					g2.dispose();
+				}
+			}
+		};
 		t_quantity = new JTextField(){
 			@Override
 			protected void paintComponent(Graphics g) {
@@ -100,8 +110,6 @@ public class IoRegistPageLayout extends JDialog {
 
 		scroll_registReason = new JScrollPane(area_registReason);
 		scroll_remark = new JScrollPane(area_remark);
-		CalendarPopUp calenderPopUp = new CalendarPopUp();
-		
 		bt_regist = new OutLineButton("등록", 107, 30, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
 		bt_cancel = new OutLineButton("취소", 107, 30, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
 		
@@ -129,7 +137,6 @@ public class IoRegistPageLayout extends JDialog {
 		scroll_remark.setPreferredSize(d2);
 		
 		add(la_expected_date);
-		calenderPopUp.addCalendarPopup(t_expected_date);
 		add(t_expected_date);
 		add(la_type);
 		add(cb_type);

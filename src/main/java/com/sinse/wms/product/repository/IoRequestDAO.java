@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sinse.wms.common.util.ChangeFormToDate;
+import com.sinse.wms.common.util.ChangeFormToDate;
 import com.sinse.wms.common.util.DBManager;
 import com.sinse.wms.product.model.Company;
 import com.sinse.wms.product.model.Dept;
@@ -338,6 +339,7 @@ public class IoRequestDAO {
             sql.append("WHERE io_request_id=?");
 
             pstmt = con.prepareStatement(sql.toString());
+            pstmt = con.prepareStatement(sql.toString());
             pstmt.setString(1, io.getIoRequest_type());
             pstmt.setInt(2, io.getProduct().getProduct_id());
             pstmt.setInt(3, io.getQuantity());
@@ -361,8 +363,8 @@ public class IoRequestDAO {
         }
     }
     
+    // 입출고 요청 업데이트
     public void update(IoRequest io, Connection con, boolean isApproved) { // true=바뀐 상태가 승인(최종상태)인지?
-        con = dbManager.getConnetion();
         PreparedStatement pstmt = null;
 
         try {
@@ -418,13 +420,15 @@ public class IoRequestDAO {
         try {
         	StringBuffer sql = new StringBuffer();
         	sql.append("SELECT ir.*,");
-        	sql.append(" p.product_name, p.product_code,");
+        	sql.append(" p.product_name, p.product_code, p.product_price, p.product_stock,");
+        	sql.append(" u.unit_name,");
         	sql.append(" co.company_name,");
         	sql.append(" m.member_name,");
         	sql.append(" d.dept_name,");
         	sql.append(" rs.status_name");
         	sql.append(" FROM io_request ir");
         	sql.append(" LEFT JOIN product p ON ir.product_id = p.product_id");
+        	sql.append(" LEFT JOIN product_unit u ON p.unit_id = u.unit_id");
         	sql.append(" LEFT JOIN company co ON p.company_id = co.company_id");
         	sql.append(" LEFT JOIN member m ON ir.request_member_id = m.member_id");
         	sql.append(" LEFT JOIN dept d ON m.dept_id = d.dept_id");
@@ -454,9 +458,9 @@ public class IoRequestDAO {
 	            if (filters.get(4) != null && !filters.get(4).isEmpty()) {
 	                sql.append(" AND p.product_name = ?");
 	            }
-	            if (filters.get(5) != null && !filters.get(5).isEmpty()) {
-	                sql.append(" AND rs.status_name = ?");
-	            }
+//	            if (filters.get(5) != null && !filters.get(5).isEmpty()) {
+//	                sql.append(" AND rs.status_name = ?");
+//	            }
         	}
             
             pstmt = con.prepareStatement(sql.toString());
@@ -494,10 +498,15 @@ public class IoRequestDAO {
 
                 Company company = new Company();
                 company.setCompany_name(rs.getString("company_name"));
+                ProductUnit unit = new ProductUnit();
+                unit.setUnit_name(rs.getString("unit_name"));
                 Product product = new Product();
                 product.setProduct_id(rs.getInt("product_id"));
                 product.setProduct_name(rs.getString("product_name"));
                 product.setProduct_code(rs.getString("product_code"));
+                product.setProduct_price(rs.getInt("product_price"));
+                product.setProduct_stock(rs.getInt("product_stock"));
+                product.setUnit(unit);
                 product.setCompany(company);
                 io.setProduct(product);
                 

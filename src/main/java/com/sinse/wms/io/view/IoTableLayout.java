@@ -34,6 +34,8 @@ public class IoTableLayout extends JPanel {
             String colName = model.getColumnName(i);
             if ("No".equals(colName)) {
                 table.getColumnModel().getColumn(i).setCellRenderer(IoTableCellFormatters.centerAlignNumber());
+            } else if(colName.contains("단가")){
+            	table.getColumnModel().getColumn(i).setCellRenderer(IoTableCellFormatters.priceAlign());
             } else {
                 table.getColumnModel().getColumn(i).setCellRenderer(IoTableCellFormatters.commonAlign());
             }

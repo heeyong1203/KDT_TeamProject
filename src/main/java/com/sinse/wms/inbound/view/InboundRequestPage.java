@@ -6,6 +6,7 @@ import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JDialog;
@@ -14,16 +15,17 @@ import javax.swing.JPanel;
 import com.sinse.wms.common.Config;
 import com.sinse.wms.common.view.button.OutLineButton;
 import com.sinse.wms.common.view.content.BaseContentPage;
-import com.sinse.wms.inbound.regist.view.IoRegistPageLayout;
 import com.sinse.wms.io.approve.IoRequestApprovalController;
 import com.sinse.wms.io.regist.IoRegistPageController;
+import com.sinse.wms.io.regist.view.IoRegistPageLauncher;
+import com.sinse.wms.io.regist.view.IoRegistPageLayout;
 import com.sinse.wms.io.util.IoFilterController;
 import com.sinse.wms.io.view.IoFilterPanel;
 import com.sinse.wms.product.model.IoRequest;
 
 public class InboundRequestPage extends BaseContentPage {
 	private String ioRequestType = "입고";
-	private String statusName = "요청";
+	private String status_type = "요청";
 	
 	private IoFilterPanel filterPanel;
     private OutLineButton bt_load, bt_regist, bt_registAll, bt_approved, bt_denied;
@@ -32,25 +34,27 @@ public class InboundRequestPage extends BaseContentPage {
 
     public InboundRequestPage(Color color) {
     	setLayout(new FlowLayout(FlowLayout.CENTER, 0, 30)); 	// 레이아웃 스타일 설정
-
+    	
 		List<IoRequest> emptyData = new ArrayList<>();
-		filterPanel = new IoFilterPanel(emptyData, statusName); // 콤보박스와 테이블을 합친 레이아웃 클래스
+		filterPanel = new IoFilterPanel(emptyData, status_type); // 콤보박스와 테이블을 합친 레이아웃 클래스
 	    add(filterPanel);                  						// 화면에 부착
 		add(createButtons()); 									// 버튼 부착
+		controller = new IoFilterController(filterPanel.getP_filters(), filterPanel.getTableLayout(), ioRequestType, status_type);
+		controller.loadTable();
 		
 		// 조회 이벤트 구현
 		bt_load.addActionListener(e->{
-			controller = new IoFilterController(filterPanel.getP_filters(), filterPanel.getTableLayout(), ioRequestType, statusName);
 			controller.loadTable();
 		});
 		
 		// 등록 이벤트 구현
         bt_regist.addMouseListener(new MouseAdapter() {
         	public void mouseReleased(MouseEvent e) {
-        		IoRegistPageLayout page = new IoRegistPageLayout(statusName);
-                new IoRegistPageController(page); // controller 생성 시 내부에서 버튼 이벤트 연결
+        		IoRegistPageLayout page = IoRegistPageLauncher.launch(status_type); // 런처 실행 (페이지 생성)
+                new IoRegistPageController(page, ioRequestType); // controller 생성 시 내부에서 버튼 이벤트 연결
                 page.setLocationRelativeTo(null);
                 page.setVisible(true);
+                controller.loadTable(); // 테이블 최신화
         	};
         });
         
@@ -58,14 +62,18 @@ public class InboundRequestPage extends BaseContentPage {
         bt_approved.addMouseListener(new MouseAdapter() {
         	public void mouseReleased(MouseEvent e) {
         		new IoRequestApprovalController(filterPanel).approveRequest();
+        		controller.loadTable(); // 테이블 최신화
         	}
         });
+        
         bt_denied.addMouseListener(new MouseAdapter() {
         	public void mouseReleased(MouseEvent e) {
         		new IoRequestApprovalController(filterPanel).denyRequests();
+        		controller.loadTable(); // 테이블 최신화
         	}
 		});   
     }
+    
     
     /*------------------------------------------------
       버튼 생성 함수
@@ -77,11 +85,13 @@ public class InboundRequestPage extends BaseContentPage {
 	  	p_bt.setOpaque(false);
 	
 	  	bt_load = new OutLineButton("조회", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
+	  	bt_load = new OutLineButton("조회", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
 		bt_regist = new OutLineButton("단일등록", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
 		bt_registAll = new OutLineButton("일괄등록", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
 		bt_approved = new OutLineButton("요청수락", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
 		bt_denied = new OutLineButton("요청거절", 107, 35, 5, 1, Config.PRIMARY_COLOR, Color.WHITE);
 		
+		p_bt.add(bt_load); // 버튼 붙이기
 		p_bt.add(bt_load); // 버튼 붙이기
 		p_bt.add(bt_regist);
 		p_bt.add(bt_registAll);

@@ -10,19 +10,25 @@ import com.sinse.wms.common.util.DBManager;
 import com.sinse.wms.io.view.IoFilterPanel;
 import com.sinse.wms.io.view.IoTableModel;
 import com.sinse.wms.product.model.IoRequest;
+import com.sinse.wms.product.model.Location;
+import com.sinse.wms.product.model.Product;
 import com.sinse.wms.product.model.RequestStatus;
+import com.sinse.wms.product.model.Stock;
 import com.sinse.wms.product.repository.IoRequestDAO;
 import com.sinse.wms.product.repository.RequestStatusDAO;
+import com.sinse.wms.product.repository.StockDAO;
 
 public class IoRequestApprovalController {
 	private IoFilterPanel filterPanel;
 	private IoRequestDAO ioRequestDAO;
 	private RequestStatusDAO statusDAO;
-
+	private StockDAO stockDAO;
+	
 	public IoRequestApprovalController(IoFilterPanel filterPanel) {
 		this.filterPanel = filterPanel;
-		this.ioRequestDAO = new IoRequestDAO();
-		this.statusDAO = new RequestStatusDAO();
+		ioRequestDAO = new IoRequestDAO();
+		statusDAO = new RequestStatusDAO();
+		stockDAO = new StockDAO();
 	}
 
 	/*-------------------------------------------------------------
@@ -58,6 +64,19 @@ public class IoRequestApprovalController {
 				} else if (currentStatus.equals("검수요청")) {
 					io.setStatus(statusDAO.findByName("승인")); // 검수요청 → 승인
 					io.setApproved_at(new java.sql.Date(System.currentTimeMillis()));
+					
+					/*---- 재고량 insert&update 필요 ----*/
+					String io_request_type = io.getIoRequest_type(); // 입출고 구분 가져오기
+					int requestQty = io.getQuantity(); // 선택한 io의 요청수량 가져오기 						
+					Product product = io.getProduct(); // fk(상품) 가져오기
+					Location location = io.getLocation(); // fk(창고) 가져오기 
+					Stock stock = stockDAO.findByProductAndLocation(product.getProduct_id(), location.getLocation_id(), con); // product, location을 통해 stock 가져오기
+					if (stock == null) {
+						stock = new Stock();
+						stock.setProduct(product);
+						stock.setLocation(location);
+					}
+					stockChangeRequest(io_request_type, stock, requestQty, con);
 					ioRequestDAO.update(io, con, true);
 				} else {
 					continue; // 승인 상태거나 무시할 상태
@@ -139,4 +158,35 @@ public class IoRequestApprovalController {
 			}
 		}
 	}
+	
+	public void stockChangeRequest(String io_request_type, Stock stock, int requestQty, Connection con) throws SQLException {
+		if(stock==null) {
+			throw new IllegalStateException("오류 발생 : stock 객체가 null입니다.");
+		}
+		if (stock.getStock_id() == 0) { // stock_id가 없다는 건 DB에 없는 상태
+			if (!"입고".equals(io_request_type)) {
+				throw new IllegalStateException("출고 요청인데 해당 위치에 재고가 존재하지 않습니다.");
+			}
+			stock.setStock_quantity(requestQty);
+			stockDAO.insert(stock, con);
+		} else {
+			int currentQty = stock.getStock_quantity();
+			int newQty;
+
+			if ("입고".equals(io_request_type)) {
+				newQty = currentQty + requestQty;
+			} else if ("출고".equals(io_request_type)) {
+				if (currentQty < requestQty) {
+					throw new IllegalStateException("출고 요청 수량이 현재 재고보다 많습니다.");
+				}
+				newQty = currentQty - requestQty;
+			} else {
+				throw new IllegalArgumentException("입출고 타입이 올바르지 않습니다: " + io_request_type);
+			}
+
+			stock.setStock_quantity(newQty);
+			stockDAO.update(stock, con);
+		}
+	}
+	
 }

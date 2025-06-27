@@ -27,11 +27,15 @@ public class ProductDAO {
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		
-		String sql = "SELECT * FROM product WHERE product_name = ?";
+		StringBuffer sql = new StringBuffer(); 
+		sql.append("SELECT p.*, u.unit_id, u.unit_name ");		
+		sql.append("FROM product p ");		
+		sql.append("LEFT JOIN product_unit u ON p.unit_id = u.unit_id ");		
+		sql.append("WHERE p.product_name = ?");		
 		
 		Connection con = dbManager.getConnetion();
 		try {
-			pstmt = con.prepareStatement(sql);
+			pstmt = con.prepareStatement(sql.toString());
 			pstmt.setString(1, name);
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
@@ -43,6 +47,11 @@ public class ProductDAO {
 				product.setProduct_price(rs.getInt("product_price"));
 				product.setProduct_stock(rs.getInt("product_stock"));
 				product.setRegdate(rs.getDate("product_regdate"));
+				
+				ProductUnit unit = new ProductUnit();
+                unit.setUnit_id(rs.getInt("unit_id"));
+                unit.setUnit_name(rs.getString("unit_name"));
+                product.setUnit(unit);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
