@@ -51,6 +51,8 @@ public class ProductDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			dbManager.release(pstmt, rs);
 		}
 		return product;
 	}  

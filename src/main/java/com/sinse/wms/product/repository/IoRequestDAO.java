@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -240,12 +241,15 @@ public class IoRequestDAO {
     // 입출고 요청 등록
     public void insert(IoRequest io, Connection con) {
         PreparedStatement pstmt = null;
+        ResultSet rs = null;
 
         try {
-            String sql = "INSERT INTO io_request (io_request_type, product_id, quantity, location_id, request_member_id, request_reason, status_id, request_at, expected_date, approve_member_id, approved_at, remark) "
-                       + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            StringBuffer sql = new StringBuffer();
+            sql.append("INSERT INTO io_request");
+            sql.append(" (io_request_type, product_id, quantity, location_id, request_member_id, request_reason, status_id, request_at, expected_date, approve_member_id, approved_at, remark)");
+            sql.append(" VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");            
 
-            pstmt = con.prepareStatement(sql);
+            pstmt = con.prepareStatement(sql.toString(), Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, io.getIoRequest_type());
             pstmt.setInt(2, io.getProduct().getProduct_id());
             pstmt.setInt(3, io.getQuantity());
@@ -259,12 +263,23 @@ public class IoRequestDAO {
             pstmt.setDate(11, io.getApproved_at());
             pstmt.setString(12, io.getRemark());
 
-            pstmt.executeUpdate();
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("입출고 요청 등록 실패: 생성된 레코드 없음.");
+            }
+
+            rs = pstmt.getGeneratedKeys();
+            if (rs.next()) {
+                int generatedId = rs.getInt(1);
+                io.setIoRequest_id(generatedId); // 객체에 반영
+            } else {
+                throw new SQLException("입출고 요청 등록 실패: 생성된 ID 없음.");
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
             dbManager.release(pstmt);
-            
         }
     }
 
@@ -352,7 +367,6 @@ public class IoRequestDAO {
 
  // 필터 요청 조회
     public List<IoRequest> selectByFilter(String io_request_type, String status_name, List<String> filters) { 
-           
         List<IoRequest> list = new ArrayList<>();
         Connection con = dbManager.getConnetion(); 
         PreparedStatement pstmt = null;
@@ -374,60 +388,37 @@ public class IoRequestDAO {
         	sql.append(" LEFT JOIN member m ON ir.request_member_id = m.member_id");
         	sql.append(" LEFT JOIN dept d ON m.dept_id = d.dept_id");
         	sql.append(" LEFT JOIN request_status rs ON ir.status_id = rs.status_id");
-        	sql.append(" WHERE 1=1");
-        	if(io_request_type != null && !io_request_type.isEmpty()) {
-        		sql.append(" AND ir.io_request_type = ?");	// 입출고명 : 입고 혹은 출고
-        	}
+        	sql.append(" WHERE 1=1"); // where문에 case를 구분하기 위한 장치(항상 참인 조건 부여)
         	
-        	if(status_name != null && !"현황".equals(status_name) && !status_name.isEmpty()) {
-        		sql.append(" AND rs.status_name = ?"); // 상태 : 요청, 검수요청, 승인, 반려        		
-        	}
+        	if(io_request_type != null && !io_request_type.isEmpty()) sql.append(" AND ir.io_request_type = ?"); // 입출고명 : 입출고 타입에 따른 조건 
+        	if(status_name != null && !"현황".equals(status_name) && !status_name.isEmpty()) sql.append(" AND rs.status_name = ?"); // 현황페이지는 필터링 없이 전체 조회해야 하기 때문에 조건 추가
         	
         	if(filters != null) {
-	            if (filters.get(0) != null && !filters.get(0).isEmpty()) {
-	                sql.append(" AND co.company_name = ?");
-	            }
-	            if (filters.get(1) != null && !filters.get(1).isEmpty()) {
-	                sql.append(" AND d.dept_name = ?");
-	            }
-	            if (filters.get(2) != null && !filters.get(2).isEmpty()) {
-	                sql.append(" AND m.member_name = ?");
-	            }
-	            if (filters.get(3) != null && !filters.get(3).isEmpty()) {
-	                sql.append(" AND p.product_code = ?");
-	            }
-	            if (filters.get(4) != null && !filters.get(4).isEmpty()) {
-	                sql.append(" AND p.product_name = ?");
-	            }
-//	            if (filters.get(5) != null && !filters.get(5).isEmpty()) {
-//	                sql.append(" AND rs.status_name = ?");
-//	            }
+	            if (filters.get(0) != null && !filters.get(0).isEmpty()) sql.append(" AND co.company_name = ?");
+	            if (filters.get(1) != null && !filters.get(1).isEmpty()) sql.append(" AND d.dept_name = ?");
+	            if (filters.get(2) != null && !filters.get(2).isEmpty()) sql.append(" AND m.member_name = ?");
+	            if (filters.get(3) != null && !filters.get(3).isEmpty()) sql.append(" AND p.product_code = ?");
+	            if (filters.get(4) != null && !filters.get(4).isEmpty()) sql.append(" AND p.product_name = ?");
+	            if (filters.get(5) != null && !filters.get(5).isEmpty()) sql.append(" AND rs.status_name = ?");
         	}
             
             pstmt = con.prepareStatement(sql.toString());
-            int index = 1;
-            if(io_request_type != null && !io_request_type.isEmpty()) {
-            	pstmt.setString(index++, io_request_type); // 매개변수로 받은 상태명
-            }
+            int index = 1; // 바인딩 변수 순서를 지정하기 위한 변수
             
-            if (status_name != null && !"현황".equals(status_name) && !status_name.isEmpty()) {
-            	pstmt.setString(index++, status_name);            	
-            }
-            
+            if(io_request_type != null && !io_request_type.isEmpty()) pstmt.setString(index++, io_request_type); 
+            if (status_name != null && !"현황".equals(status_name) && !status_name.isEmpty()) pstmt.setString(index++, status_name);
+
             if(filters != null) {
             	for(int i = 0; i < filters.size(); i++) {
             		String filter = filters.get(i);
-            		if(filter != null && !filter.isEmpty()) {
-            			pstmt.setString(index++, filter);
-            		}
+            		if(filter != null && !filter.isEmpty()) pstmt.setString(index++, filter);
             	}
             }
-            
-            
+
             rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                IoRequest io = new IoRequest();
+                IoRequest io = new IoRequest(); // 입출고요청 모델 인스턴스 생성
                 io.setIoRequest_id(rs.getInt("io_request_id"));
                 io.setIoRequest_type(rs.getString("io_request_type"));
                 io.setQuantity(rs.getInt("quantity"));
@@ -437,10 +428,13 @@ public class IoRequestDAO {
                 io.setApproved_at(rs.getDate("approved_at"));
                 io.setRemark(rs.getString("remark"));
 
-                Company company = new Company();
+            	// 입출고요청 모델의 부모 모델 인스턴스 생성
+                Company company = new Company(); 
                 company.setCompany_name(rs.getString("company_name"));
-                ProductUnit unit = new ProductUnit();
+                
+                ProductUnit unit = new ProductUnit(); 
                 unit.setUnit_name(rs.getString("unit_name"));
+                
                 Product product = new Product();
                 product.setProduct_id(rs.getInt("product_id"));
                 product.setProduct_name(rs.getString("product_name"));

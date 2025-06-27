@@ -87,7 +87,7 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
             SideMenuHelper.createSideMenu(Menu.STATISTICS, this),
             SideMenuHelper.createSideMenu(Menu.USER_MANAGEMENT, this)
         };
-        this.sidebar = new SideBar("사용자 페이지", sideMenuGroups);
+        this.sidebar = new SideBar("관리자 페이지", sideMenuGroups);
     }
 
     /**

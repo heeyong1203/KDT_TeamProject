@@ -26,6 +26,9 @@ public class PdfFileExport {
 		사용법: PdfFileExport.exportToPdf(String 형식의 컬럼배열, tableModel, path, pdf 내용 상단에 들어갈 제목)
 	 * ------------------------------------------------------------------------ */
 	public static String exportToPdf(String[] title, TableModel tableModel, String path, String pageTitle) {
+		//export 취소 시
+		if (path == null || path.trim().isEmpty()) return "pdf 내보내기가 취소되었습니다.";
+		
 		String pdfFilePath = UniqueFileName.getUniqueFileName(path, "pdf");
 		String resultMsg = null;
 		
@@ -89,6 +92,9 @@ public class PdfFileExport {
 		사용법: PdfFileExport.exportToPdf(String 형식의 컬럼리스트, tableModel, path, pdf 내용 상단에 들어갈 제목)
 	 * ------------------------------------------------------------------------ */
 	public static String exportToPdf(List<String> title, TableModel tableModel, String path, String pageTitle) {
+		//export 취소 시
+		if (path == null || path.trim().isEmpty()) return "pdf 내보내기가 취소되었습니다.";
+		
 		String pdfFilePath = UniqueFileName.getUniqueFileName(path, "pdf");
 		String resultMsg = null;
 		
@@ -150,6 +156,9 @@ public class PdfFileExport {
 	
 	//동적 테이블 용 pdf 출력
 	public static String exportToPdf(String[] title, DefaultTableModel tableModel, String path, String pageTitle) {
+		//export 취소 시
+		if (path == null || path.trim().isEmpty()) return "pdf 내보내기가 취소되었습니다.";
+				
 		String pdfFilePath = UniqueFileName.getUniqueFileName(path, "pdf");
 		String resultMsg = null;
 		

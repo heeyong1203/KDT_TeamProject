@@ -14,44 +14,42 @@ import com.sinse.wms.common.Config;
 import com.sinse.wms.common.view.button.OutLineButton;
 import com.sinse.wms.common.view.content.BaseContentPage;
 import com.sinse.wms.io.approve.IoRequestApprovalController;
-import com.sinse.wms.io.util.IoFilterController;
+import com.sinse.wms.io.util.IoSelectController;
 import com.sinse.wms.io.view.IoFilterPanel;
 import com.sinse.wms.product.model.IoRequest;
 
 public class OutboundInspectionPage extends BaseContentPage {
 	private String ioRequestType = "출고";
-	private String statusName = "검수요청";
+	private String status_type = "검수요청";
 
 	private IoFilterPanel filterPanel;
 	private OutLineButton bt_load, bt_approved, bt_denied;
-	private IoFilterController controller;
 
-    public OutboundInspectionPage(Color color) {
-    	setLayout(new FlowLayout(FlowLayout.CENTER, 0, 30)); 	// 레이아웃 스타일 설정
+	public OutboundInspectionPage(Color color) {
+		setLayout(new FlowLayout(FlowLayout.CENTER, 0, 30)); // 레이아웃 스타일 설정
 
 		List<IoRequest> emptyData = new ArrayList<>();
-		filterPanel = new IoFilterPanel(emptyData, statusName); // 콤보박스와 테이블을 합친 레이아웃 클래스
-	    add(filterPanel);                  						// 화면에 부착
-		add(createButtons()); 									// 버튼 부착
-		
-		// 조회 이벤트 구현
-		bt_load.addActionListener(e->{
-			controller = new IoFilterController(filterPanel.getP_filters(), filterPanel.getTableLayout(), ioRequestType, statusName);
-			controller.loadTable();
+		filterPanel = new IoFilterPanel(emptyData, status_type); // 콤보박스와 테이블을 합친 레이아웃 클래스
+		add(filterPanel); // 화면에 부착
+		add(createButtons()); // 버튼 부착
+
+		// 조회(select) 이벤트 구현
+		bt_load.addActionListener(e -> {
+			new IoSelectController(filterPanel, ioRequestType, status_type);
 		});
 
-        // 승인, 거절 이벤트 구현
-        bt_approved.addMouseListener(new MouseAdapter() {
-        	public void mouseReleased(MouseEvent e) {
-        		new IoRequestApprovalController(filterPanel).approveRequest();
-        		controller.loadTable(); // 테이블 최신화
-        	}
-        });
-        bt_denied.addMouseListener(new MouseAdapter() {
-        	public void mouseReleased(MouseEvent e) {
-        		new IoRequestApprovalController(filterPanel).denyRequests();
-        		controller.loadTable(); // 테이블 최신화
-        	}
+		// 승인(update) 이벤트 구현
+		bt_approved.addMouseListener(new MouseAdapter() {
+			public void mouseReleased(MouseEvent e) {
+				new IoRequestApprovalController(filterPanel).approveRequest();
+			}
+		});
+
+		// 거절(update) 이벤트 구현
+		bt_denied.addMouseListener(new MouseAdapter() {
+			public void mouseReleased(MouseEvent e) {
+				new IoRequestApprovalController(filterPanel).denyRequests();
+			}
 		});
 	}
 

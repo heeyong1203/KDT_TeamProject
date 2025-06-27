@@ -20,9 +20,14 @@ public class ExcelFileExport {
 		사용법: ExcelFileExport.exportToExcel(String 배열 형식의 컬럼, tableModel, 확장자를 뺀 경로);
 	 * ------------------------------------------------------------------------ */
 	public static String exportToExcel(String[] title, TableModel tableModel, String path) {
+		
+		//export 취소 시
+		if (path == null || path.trim().isEmpty()) return "엑셀 내보내기가 취소되었습니다.";
+		String excelFilePath = UniqueFileName.getUniqueFileName(path, "xlsx");
+		String resultMsg = null;
+		
 		Workbook workbook = new XSSFWorkbook();
 		Sheet sheet = workbook.createSheet("download");
-		String resultMsg = null;
 		
 		//헤더 행 생성
 		Row headerRow = sheet.createRow(0);
@@ -39,7 +44,6 @@ public class ExcelFileExport {
 			}
 		}
 		
-		String excelFilePath = UniqueFileName.getUniqueFileName(path, "xlsx");
 				
 		//파일 다운받기
 		try (FileOutputStream fo = new FileOutputStream(excelFilePath)){
@@ -62,9 +66,15 @@ public class ExcelFileExport {
 		사용법: ExcelFileExport.exportToExcel(String> 리스트 형식의 컬럼, tableModel, 확장자를 뺀 경로);
 	 * ------------------------------------------------------------------------ */
 	public static String exportToExcel(List<String> title, TableModel tableModel, String path) {
+		
+		//export 취소 시
+		if (path == null || path.trim().isEmpty()) return "엑셀 내보내기가 취소되었습니다.";
+		
+		String excelFilePath = UniqueFileName.getUniqueFileName(path, "xlsx");
+		String resultMsg = null;
+		
 		Workbook workbook = new XSSFWorkbook();
 		Sheet sheet = workbook.createSheet("download");
-		String resultMsg = null;
 		
 		//헤더 행 생성
 		Row headerRow = sheet.createRow(0);
@@ -81,13 +91,14 @@ public class ExcelFileExport {
 			}
 		}
 		
-		String excelFilePath = UniqueFileName.getUniqueFileName(path, "xlsx");
-				
+		
+
 		//파일 다운받기
 		try (FileOutputStream fo = new FileOutputStream(excelFilePath)){
 			workbook.write(fo);
 			workbook.close();
 			resultMsg = "엑셀 파일 저장 완료!";
+			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			resultMsg = "엑셀 파일을 저장할 수 없습니다.";
@@ -100,9 +111,15 @@ public class ExcelFileExport {
 	
 	//동적테이블 용 pdf 추출
 	public static String exportToExcel(List<String> title, DefaultTableModel tableModel, String path) {
+		
+		//export 취소 시
+		if (path == null || path.trim().isEmpty()) return "엑셀 내보내기가 취소되었습니다.";
+		
+		String excelFilePath = UniqueFileName.getUniqueFileName(path, "xlsx");
+		String resultMsg = null;
+		
 		Workbook workbook = new XSSFWorkbook();
 		Sheet sheet = workbook.createSheet("download");
-		String resultMsg = null;
 		
 		//헤더 행 생성
 		Row headerRow = sheet.createRow(0);
@@ -119,7 +136,6 @@ public class ExcelFileExport {
 			}
 		}
 		
-		String excelFilePath = UniqueFileName.getUniqueFileName(path, "xlsx");
 				
 		//파일 다운받기
 		try (FileOutputStream fo = new FileOutputStream(excelFilePath)){
