@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import com.sinse.wms.main.model.WeatherData;
 
 public class WeatherFetcher {
-    private static final String API_KEY = "2b8d62f9473dfd517777f5dfc9f3d3db"; // 여기에 본인 키 입력
+    private static final String API_KEY = "2b8d62f9473dfd517777f5dfc9f3d3db"; 
 
     public static WeatherData fetch(String city) throws IOException {
         String urlStr = "https://api.openweathermap.org/data/2.5/weather?q=" + city +

@@ -70,44 +70,56 @@ public class MemberDAO {
 	//로그인 기능 구현을 위한 특정 회원 조회
 	//조건 : member_email 와 memeber_Pwd가 같은 회원
 	public Member selectToLogin(String id, String pwd) {
-		Connection con = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		Member m = null;
+	    Connection con = null;
+	    PreparedStatement pstmt = null;
+	    ResultSet rs = null;
+	    Member m = null;
 
-		con = dbManager.getConnetion();
+	    con = dbManager.getConnetion();
 
-		try {
-			String sql = "SELECT * FROM member WHERE member_email = ? AND member_password = ?";
-			pstmt = con.prepareStatement(sql);
-			pstmt.setString(1, id);
-			pstmt.setString(2, pwd);
-			rs = pstmt.executeQuery();
+	    try {
+	        String sql = "SELECT \n"
+	        		+ "m.member_id, m.member_email, m.member_password, m.member_name, m.member_hiredate,\n"
+	        		+ "m.dept_id, d.dept_name,\n"
+	        		+ "a.auth_id, a.auth_name, a.auth_flag\n"
+	        		+ "FROM member m \n"
+	        		+ "JOIN auth a ON m.auth_id = a.auth_id \n"
+	        		+ "JOIN dept d ON m.dept_id = d.dept_id\n"
+	        		+ "WHERE m.member_email = ? AND m.member_password = ?\n"
+	        		+ "";
+	        pstmt = con.prepareStatement(sql);
+	        pstmt.setString(1, id);
+	        pstmt.setString(2, pwd);
+	        rs = pstmt.executeQuery();
 
-			if (rs.next()) {
-				m = new Member();
-				m.setMember_id(rs.getInt("member_id"));
-				m.setMember_email(rs.getString("member_email"));
-				m.setMember_password(rs.getString("member_password"));
-				m.setMember_name(rs.getString("member_name"));
-				m.setMemberhiredate(rs.getDate("member_hiredate"));
+	        if (rs.next()) {
+	            m = new Member();
+	            m.setMember_id(rs.getInt("member_id"));
+	            m.setMember_email(rs.getString("member_email"));
+	            m.setMember_password(rs.getString("member_password"));
+	            m.setMember_name(rs.getString("member_name"));
+	            m.setMemberhiredate(rs.getDate("member_hiredate"));
 
-				Dept d = new Dept();
-				d.setDept_id(rs.getInt("dept_id"));
-				m.setDept(d);
+	            Dept d = new Dept();
+	            d.setDept_id(rs.getInt("dept_id"));
+	            d.setDept_name(rs.getString("dept_name"));
+	            m.setDept(d);
 
-				Auth a = new Auth();
-				a.setAuth_id(rs.getInt("auth_id"));
-				m.setAuth(a);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			dbManager.release(pstmt, rs);
-		}
+	            Auth a = new Auth();
+	            a.setAuth_id(rs.getInt("auth_id"));
+	            a.setAuth_name(rs.getString("auth_name"));
+	            a.setAuth_flag(rs.getInt("auth_flag"));   
+	            m.setAuth(a);
+	        }
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        dbManager.release(pstmt, rs);
+	    }
 
-		return m;
+	    return m;
 	}
+
 
 	// 전체 회원 조회
 	public List<Member> selectAll() {
