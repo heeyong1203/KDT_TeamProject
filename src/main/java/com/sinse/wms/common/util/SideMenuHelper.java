@@ -45,8 +45,10 @@ public class SideMenuHelper {
 			break;
 
 		case USER_MANAGEMENT:
-			topMenuName = "사용자 관리";
-			imageName = "id_card_icon.png";
+			topMenuName = "관리";
+			imageName = "management_icon.png";
+			subMenus.add(new SideSubMenu(Menu.USER_MANAGEMENT, "사용자 관리", listener));
+			subMenus.add(new SideSubMenu(Menu.PRODUCT_MANAGEMENT, "상품 관리", listener));
 			break;
 		default:
 			throw new IllegalArgumentException("Not TopMenu");

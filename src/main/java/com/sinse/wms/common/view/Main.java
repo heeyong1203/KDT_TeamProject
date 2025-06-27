@@ -21,6 +21,7 @@ import com.sinse.wms.inbound.view.InboundRequestPage;
 import com.sinse.wms.inbound.view.InboundStatusPage;
 import com.sinse.wms.inventory.view.InventoryStatusPage;
 import com.sinse.wms.main.view.MainPage;
+import com.sinse.wms.management.product.view.ProductManagementPage;
 import com.sinse.wms.membermanagement.view.MemberManagementPage;
 import com.sinse.wms.menu.help.view.HelpMenu;
 import com.sinse.wms.menu.search.view.SearchMenu;
@@ -146,6 +147,7 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 		this.bodyContent.add(new ReportPage(Color.white), Menu.REPORT.name()); // 통계 및 보고서 현황 페이지
 		this.bodyContent.add(new MemberManagementPage(), Menu.USER_MANAGEMENT.name());
 		this.bodyContent.add(new Mypage(Color.white,m), Menu.MY_PAGE.name());	
+		this.bodyContent.add(new ProductManagementPage(), Menu.PRODUCT_MANAGEMENT.name());
 		this.bodyContent.add(new HelpMenu(), Menu.HELP.name());	//도움말 페이지
 		this.bodyContent.add(new SettingMenu(), Menu.SETTING.name());	//환경설정 페이지
 		this.bodyContent.add(new Chat(),Menu.CHAT.name());
