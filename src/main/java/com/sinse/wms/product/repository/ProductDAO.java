@@ -24,7 +24,8 @@ public class ProductDAO {
 	public Product findByName(String name) {
 		Product product = null;
 		PreparedStatement pstmt = null;
-		ResultSet rs = null;	
+		ResultSet rs = null;
+		
 		StringBuffer sql = new StringBuffer(); 
 		sql.append("SELECT p.*, u.unit_id, u.unit_name ");		
 		sql.append("FROM product p ");		
@@ -33,6 +34,7 @@ public class ProductDAO {
 		
 		Connection con = dbManager.getConnetion();
 		try {
+			pstmt = con.prepareStatement(sql.toString());
 			pstmt = con.prepareStatement(sql.toString());
 			pstmt.setString(1, name);
 			rs = pstmt.executeQuery();
@@ -53,6 +55,8 @@ public class ProductDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			dbManager.release(pstmt, rs);
 		}
 		return product;
 	}
@@ -175,6 +179,7 @@ public class ProductDAO {
 				p.setProduct_id(rs.getInt("product_id"));
 				p.setProduct_code(rs.getString("product_code"));
 				p.setProduct_name(rs.getString("product_name"));
+				p.setProduct_description(rs.getString("product_description"));
 				p.setProduct_description(rs.getString("product_description"));
 				p.setProduct_price(rs.getInt("product_price"));
 				p.setProduct_stock(rs.getInt("product_stock"));

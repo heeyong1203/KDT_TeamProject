@@ -16,6 +16,7 @@ import com.sinse.wms.common.view.sidemenu.SideBar;
 import com.sinse.wms.common.view.sidemenu.SideMenuGroup;
 import com.sinse.wms.common.view.toolbar.ToolBar;
 import com.sinse.wms.common.view.toolbar.ToolBar.ToolBarListener;
+import com.sinse.wms.statistic.view.StatisticPage;
 import com.sinse.wms.inbound.view.InboundInspectionPage;
 import com.sinse.wms.inbound.view.InboundRequestPage;
 import com.sinse.wms.inbound.view.InboundStatusPage;
@@ -32,7 +33,6 @@ import com.sinse.wms.outbound.view.OutboundRequestPage;
 import com.sinse.wms.outbound.view.OutboundStatusPage;
 import com.sinse.wms.product.model.Member;
 import com.sinse.wms.report.view.ReportPage;
-import com.sinse.wms.statistic.view.StatisticPage;
 
 
 public class Main extends JFrame implements SideMenuClickListener, ToolBarListener {
@@ -47,23 +47,23 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 	private SideMenuGroup[] userSideMenuGroups; //사용자 메뉴 구현
 	Member m; // 로그인한 사용자 정보 받아옴
 
-	public Main(Member m) {
-		this.m = m;
-		setSize(Config.MAIN_WINDOW_WIDTH, Config.MAIN_WINDOW_HEIGHT);
-		initToolbar();
-		initSideBar();
-		initHeader();
-		initContents();
+    public Main(Member m) {
+        this.m = m;
+        setSize(Config.MAIN_WINDOW_WIDTH, Config.MAIN_WINDOW_HEIGHT);
+        initToolbar();
+        initSideBar();
+        initHeader();
+        initContents();
 
-		this.bodyWrapper = new JPanel(new BorderLayout());
-		this.bodyWrapper.add(header, BorderLayout.NORTH);
-		this.bodyWrapper.add(bodyContent, BorderLayout.CENTER);
-		this.centerWrapper = new JPanel(new BorderLayout());
-		this.centerWrapper.add(sidebar, BorderLayout.WEST);
-		this.centerWrapper.add(bodyWrapper, BorderLayout.CENTER);
+        this.bodyWrapper = new JPanel(new BorderLayout());
+        this.bodyWrapper.add(header, BorderLayout.NORTH);
+        this.bodyWrapper.add(bodyContent, BorderLayout.CENTER);
+        this.centerWrapper = new JPanel(new BorderLayout());
+        this.centerWrapper.add(sidebar, BorderLayout.WEST);
+        this.centerWrapper.add(bodyWrapper, BorderLayout.CENTER);
 
-		add(toolbar, BorderLayout.WEST);
-		add(centerWrapper, BorderLayout.CENTER);
+        add(toolbar, BorderLayout.WEST);
+        add(centerWrapper, BorderLayout.CENTER);
 
 		toolbar.setToolBarListener(this);
 
@@ -222,7 +222,6 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 		// TODO("툴바 메시지 아이콘 클릭시 구현");
 		this.cardLayout.show(this.bodyContent,Menu.CHAT.name());
 	}
-
 	@Override
 	public void onClickSearch() {
 		// 한 번만 실행
@@ -240,4 +239,6 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 	public void onClickSettings() {
 		this.cardLayout.show(this.bodyContent, Menu.SETTING.name());
 	}
+	
+	
 }
