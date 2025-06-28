@@ -44,6 +44,8 @@ public class MemberDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			dbManager.release(pstmt, rs);
 		}
 		return member;
 	}  

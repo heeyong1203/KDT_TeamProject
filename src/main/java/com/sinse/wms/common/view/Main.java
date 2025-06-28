@@ -28,6 +28,7 @@ import com.sinse.wms.outbound.view.OutboundStatusPage;
 import com.sinse.wms.product.model.Member;
 import com.sinse.wms.report.view.ReportPage;
 
+
 public class Main extends JFrame implements SideMenuClickListener, ToolBarListener {
     private ToolBar toolbar;
     private SideBar sidebar;
@@ -173,11 +174,11 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
         this.cardLayout.show(this.bodyContent, Menu.MY_PAGE.name());
     }
 
-    @Override
-    public void onClickMessageBox() {
-        // TODO("툴바 메시지 아이콘 클릭시 구현");
-    }
-
+	@Override
+	public void onClickMessageBox() {
+		// TODO("툴바 메시지 아이콘 클릭시 구현");
+		this.cardLayout.show(this.bodyContent,Menu.CHAT.name());
+	}
 	@Override
 	public void onClickSearch() {
 		// 한 번만 실행
@@ -195,6 +196,6 @@ public class Main extends JFrame implements SideMenuClickListener, ToolBarListen
 	public void onClickSettings() {
 		this.cardLayout.show(this.bodyContent, Menu.SETTING.name());
 	}
-
-
+	
+	
 }

@@ -38,6 +38,8 @@ public class LocationDAO {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			dbManager.release(pstmt, rs);
 		}
 		return location;
 	}  
