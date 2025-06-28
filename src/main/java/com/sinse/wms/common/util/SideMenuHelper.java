@@ -49,6 +49,7 @@ public class SideMenuHelper {
 			imageName = "management_icon.png";
 			subMenus.add(new SideSubMenu(Menu.USER_MANAGEMENT, "사용자 관리", listener));
 			subMenus.add(new SideSubMenu(Menu.PRODUCT_MANAGEMENT, "상품 관리", listener));
+			subMenus.add(new SideSubMenu(Menu.CATEGORY_COMPANY_UNIT_LOCATION_MANAGEMENT, "기타 관리", listener));
 			break;
 		default:
 			throw new IllegalArgumentException("Not TopMenu");

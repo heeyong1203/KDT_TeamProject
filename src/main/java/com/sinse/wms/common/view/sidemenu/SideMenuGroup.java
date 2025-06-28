@@ -42,7 +42,6 @@ public class SideMenuGroup extends JPanel {
 		this.subMenuWrapper.setLayout(new BoxLayout(subMenuWrapper, BoxLayout.Y_AXIS));
 		this.subMenuWrapper.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
 		this.subMenuWrapper.setVisible(false);
-		this.subMenuWrapper.setBackground(Color.BLUE);
 
 		if (this.subMenus != null) {
 			for (SideSubMenu subMenu : this.subMenus) {

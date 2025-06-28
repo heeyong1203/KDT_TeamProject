@@ -1,29 +1,4 @@
-package com.sinse.wms.membermanagement.view;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.table.DefaultTableCellRenderer;
+package com.sinse.wms.management.member.view;
 
 import com.sinse.wms.common.Config;
 import com.sinse.wms.common.exception.MemberDeleteException;
@@ -37,6 +12,17 @@ import com.sinse.wms.product.repository.AuthDAO;
 import com.sinse.wms.product.repository.DeptDAO;
 import com.sinse.wms.product.repository.JobGradeDAO;
 import com.sinse.wms.product.repository.MemberDAO;
+
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class MemberManagementPage extends BaseContentPage implements MemberInfoDialog.MemberInfoDialogListener {
 	private JPanel p_top_wrapper;
@@ -59,8 +45,6 @@ public class MemberManagementPage extends BaseContentPage implements MemberInfoD
 	private String userCountFormat = "%d명";
 	private String deactivatedFormat = "(휴면유저 : %d)";
 	private String deleteUserFormat = "\"%s\" 유저를 정말 삭제 하시겠습니까?";
-
-	private MemberInfoDialog member_info_dialog;
 
 	private MemberDAO memberDAO = new MemberDAO();
 	private DeptDAO deptDAO = new DeptDAO();
@@ -107,21 +91,17 @@ public class MemberManagementPage extends BaseContentPage implements MemberInfoD
 		this.obt_search_user = new OutLineButton("검색", 60, 20, 10, 1, Color.BLACK, Color.WHITE);
 		this.obt_add_user.setEnabled(true);
 		this.obt_add_user.addActionListener(e -> {
-			member_info_dialog.setType(MemberDialogType.ADD);
-			getDepts();
-			getAuth();
-			getJobGrade();
-			member_info_dialog.setMember(null);
-			member_info_dialog.setVisible(true);
+			MemberInfoDialog memberInfoDialog =  new MemberInfoDialog(JOptionPane.getFrameForComponent(this), this);
+			setDialogComboBoxData(memberInfoDialog);
+			memberInfoDialog.setMember(null);
+			memberInfoDialog.setVisible(true);
 		});
 		this.obt_modify_user.setEnabled(false);
 		this.obt_modify_user.addActionListener(e -> {
-			member_info_dialog.setType(MemberDialogType.MODIFY);
-			getDepts();
-			getAuth();
-			getJobGrade();
-			member_info_dialog.setMember(selectedMember);
-			member_info_dialog.setVisible(true);
+			MemberInfoDialog memberInfoDialog =  new MemberInfoDialog(JOptionPane.getFrameForComponent(this), this);
+			setDialogComboBoxData(memberInfoDialog);
+			memberInfoDialog.setMember(selectedMember);
+			memberInfoDialog.setVisible(true);
 		});
 		this.obt_delete_user.setEnabled(false);
 		this.obt_delete_user.addActionListener(e -> {
@@ -177,17 +157,19 @@ public class MemberManagementPage extends BaseContentPage implements MemberInfoD
 		this.tb_member = new JTable();
 		this.tb_member.setModel(new MemberManagementTableModel(Arrays.asList()));
 		this.tb_member.setAutoCreateRowSorter(true);
-		this.tb_member.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				int row = tb_member.getSelectedRow();
-				if (row != -1) {
-					int memberRow = tb_member.convertRowIndexToModel(row);
-					if (tb_member.getModel() instanceof MemberManagementTableModel) {
-						selectedMember = ((MemberManagementTableModel) tb_member.getModel()).getMemberAt(memberRow);
-						updateUi();
-					}
-				}
+		this.tb_member.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.tb_member.getSelectionModel().addListSelectionListener(e->{
+			if (!e.getValueIsAdjusting()) {
+				return;
+			}
+			int row = tb_member.getSelectedRow();
+			if (row == -1) {
+				return;
+			}
+			int memberRow = tb_member.convertRowIndexToModel(row);
+			if (tb_member.getModel() instanceof MemberManagementTableModel) {
+				selectedMember = ((MemberManagementTableModel) tb_member.getModel()).getMemberAt(memberRow);
+				updateUi();
 			}
 		});
 		this.sp_table_scroll = new JScrollPane(tb_member);
@@ -225,7 +207,6 @@ public class MemberManagementPage extends BaseContentPage implements MemberInfoD
 
 		add(this.p_top_wrapper, BorderLayout.NORTH);
 		add(this.sp_table_scroll, BorderLayout.CENTER);
-		member_info_dialog = new MemberInfoDialog(JOptionPane.getFrameForComponent(this), MemberDialogType.ADD, this);
 		getData();
 	}
 
@@ -252,19 +233,13 @@ public class MemberManagementPage extends BaseContentPage implements MemberInfoD
 		initUsersStatus();
 	}
 
-	private void getDepts() {
+	private void setDialogComboBoxData(MemberInfoDialog memberInfoDialog){
 		List<Dept> depts = this.deptDAO.selectAll();
-		this.member_info_dialog.setDepts(depts);
-	}
-
-	private void getAuth() {
+		memberInfoDialog.setDepts(depts);
 		List<Auth> auths = this.authDAO.selectAll();
-		this.member_info_dialog.setAuth(auths);
-	}
-
-	private void getJobGrade() {
+		memberInfoDialog.setAuth(auths);
 		List<JobGrade> jobGrades = this.jobGradeDAO.selectAll();
-		this.member_info_dialog.setJobGrades(jobGrades);
+		memberInfoDialog.setJobGrades(jobGrades);
 	}
 
 	private void getUsers() {

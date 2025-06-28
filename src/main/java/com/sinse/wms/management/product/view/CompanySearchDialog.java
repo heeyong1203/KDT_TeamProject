@@ -75,7 +75,7 @@ public class CompanySearchDialog extends JDialog {
 	private void searchCompany() {
 		String input = this.tf_inputCompany.getText();
 		try {
-			this.companies = this.companyDAO.selectByName(input);
+			this.companies = this.companyDAO.selectByNameLike(input);
 			updateTable();
 		} catch (CompanySelectException e) {
 			e.printStackTrace();

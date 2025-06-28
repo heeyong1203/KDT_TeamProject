@@ -1,23 +1,19 @@
 package com.sinse.wms.management.product.view;
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -25,12 +21,8 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
-import com.sinse.wms.common.Config;
 import com.sinse.wms.common.view.button.OutLineButton;
-import com.sinse.wms.membermanagement.view.MemberManagementTableModel;
-import com.sinse.wms.product.model.Category;
 import com.sinse.wms.product.model.Product;
-import com.sinse.wms.product.repository.CategoryDAO;
 
 public class ProductTablePanel extends JPanel {
 	private JPanel p_buttonWrapper;
@@ -91,11 +83,11 @@ public class ProductTablePanel extends JPanel {
 		this.tableModel = new ProductManagementTableModel();
 		this.tb_product = new JTable(this.tableModel);
 		this.tb_product.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		this.tb_product.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				onClickProductTable();
+		this.tb_product.getSelectionModel().addListSelectionListener(e -> {
+			if (!e.getValueIsAdjusting()) {
+				return;
 			}
+			onClickProductTable();
 		});
 		this.sp_product_scroll = new JScrollPane(this.tb_product);
 

@@ -1,4 +1,4 @@
-package com.sinse.wms.membermanagement.view;
+package com.sinse.wms.management.member.view;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -58,12 +58,11 @@ public class MemberInfoDialog extends JDialog {
 	private List<Auth> auths = null;
 	private List<JobGrade> jobGrades = null;
 	private Member member = null;
-	private MemberDialogType type;
 
 	private MemberInfoDialogListener listener = null;
 	private MemberDAO memberDAO = new MemberDAO();
 
-	public MemberInfoDialog(Frame parent, MemberDialogType type, MemberInfoDialogListener listener) {
+	public MemberInfoDialog(Frame parent, MemberInfoDialogListener listener) {
 		super(parent, true);
 		setLayout(new FlowLayout());
 		setSize(700, 780);
@@ -130,13 +129,10 @@ public class MemberInfoDialog extends JDialog {
 		this.bt_submit.setForeground(Color.WHITE);
 		this.bt_submit.setPreferredSize(bt_size);
 		this.bt_submit.addActionListener(e -> {
-			switch (this.type) {
-			case ADD:
+			if (this.member == null) {
 				insertMember();
-				break;
-			default:
-				updatetMember();
-				break;
+			}else{
+				updateMember();
 			}
 		});
 
@@ -158,68 +154,55 @@ public class MemberInfoDialog extends JDialog {
 		p_wrapper.add(tf_hire_day);
 		p_wrapper.add(bt_submit);
 		add(p_wrapper);
-
-		setType(type);
-
+		initView();
 	}
 
-	public void setType(MemberDialogType type) {
-		this.type = type;
-		setTitle(type);
-		setButton(type);
-		setInputHireDay(type);
+	public void initView() {
+		setTitle();
+		setButton();
+		setInputHireDay();
 	}
 
-	private void setTitle(MemberDialogType type) {
+	private void setTitle() {
 		String title = "";
-		switch (type) {
-		case ADD:
+		if (this.member == null) {
 			title = "등록하기";
-			break;
-		case MODIFY:
+		} else {
 			title = "수정하기";
-			break;
 		}
 		this.setTitle(title);
 		this.la_title.setText(title);
 	}
 
-	private void setButton(MemberDialogType type) {
+	private void setButton() {
 		String button_text = "";
-		switch (type) {
-		case ADD:
+		if(this.member == null){
 			button_text = "등록";
-			break;
-		default:
+		} else {
 			button_text = "수정";
-			break;
-
 		}
 		this.bt_submit.setText(button_text);
 	}
 
-	private void setInputHireDay(MemberDialogType type) {
-		switch (type) {
-		case ADD:
+	private void setInputHireDay() {
+		if(this.member == null){
 			la_hire_day.setVisible(false);
 			tf_hire_day.setVisible(false);
 			tf_email.setEditable(true);
-			break;
-		default:
+		} else {
 			la_hire_day.setVisible(true);
 			tf_hire_day.setVisible(true);
 			tf_hire_day.setEditable(false);
 			tf_email.setEditable(false);
-			break;
 		}
 		revalidate();
 		repaint();
 	}
 
 	private void insertMember() {
-		List<String> invailds = getInvailds();
-		if (!invailds.isEmpty()) {
-			String script = String.join(",", invailds) + "입력을 확인해주세요";
+		List<String> invalids = getInvailds();
+		if (!invalids.isEmpty()) {
+			String script = String.join(",", invalids) + "입력을 확인해주세요";
 			JOptionPane.showMessageDialog(this, script);
 			return;
 		}
@@ -252,10 +235,10 @@ public class MemberInfoDialog extends JDialog {
 		}
 	}
 
-	private void updatetMember() {
-		List<String> invailds = getInvailds();
-		if (!invailds.isEmpty()) {
-			String script = String.join(",", invailds) + " 를 확인해주세요";
+	private void updateMember() {
+		List<String> invalids = getInvailds();
+		if (!invalids.isEmpty()) {
+			String script = String.join(",", invalids) + " 를 확인해주세요";
 			JOptionPane.showMessageDialog(this, script);
 			return;
 		}
@@ -274,7 +257,7 @@ public class MemberInfoDialog extends JDialog {
 		updateMember.setDept(dept);
 		updateMember.setAuth(auth);
 		updateMember.setJobGrade(jobGrade);
-		
+
 		try {
 			this.memberDAO.update(updateMember);
 			JOptionPane.showMessageDialog(this, "수정에 성공하였습니다.");
@@ -287,7 +270,7 @@ public class MemberInfoDialog extends JDialog {
 			JOptionPane.showMessageDialog(this, "수정에 실패하였습니다.");
 		}
 	}
-	
+
 	private Dept getSelectedDept() {
 		return this.depts.get(this.cb_dept.getSelectedIndex()-1);
 	}
@@ -310,7 +293,7 @@ public class MemberInfoDialog extends JDialog {
 			invaild.add("이메일형식");
 		}
 
-		if (this.type == MemberDialogType.ADD && String.valueOf(this.tf_pwd.getPassword()).trim().length() == 0) {
+		if (this.member == null && String.valueOf(this.tf_pwd.getPassword()).trim().length() == 0) {
 			invaild.add("비밀번호");
 		}
 
@@ -338,9 +321,9 @@ public class MemberInfoDialog extends JDialog {
 
 	public void setAuth(List<Auth> auths) {
 		this.auths = auths;
-		String[] authtNames = Stream.concat(Stream.of("권한을 선택해주세요"), auths.stream().map(a -> a.getAuth_name()))
+		String[] authNames = Stream.concat(Stream.of("권한을 선택해주세요"), auths.stream().map(a -> a.getAuth_name()))
 				.toArray(String[]::new);
-		this.cb_auth.setModel(new DefaultComboBoxModel<>(authtNames));
+		this.cb_auth.setModel(new DefaultComboBoxModel<>(authNames));
 	}
 
 	public void setJobGrades(List<JobGrade> jobGrades) {

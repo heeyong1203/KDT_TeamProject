@@ -5,6 +5,8 @@ import com.sinse.wms.common.view.ChatServer;
 import com.sinse.wms.common.view.Main;
 import com.sinse.wms.product.model.Member; // ChatServer가 있는 위치에 맞게 import 경로 수정
 
+import javax.swing.*;
+
 public class App {
 
     // 서버 실행 여부 체크 변수 (중복 실행 방지)
@@ -15,7 +17,9 @@ public class App {
      */
     public static void main(String[] args) {
         startChatServer();    // ✅ 서버 자동 실행
-        new Main(null);       // 테스트 실행 (Member 없음)
+        SwingUtilities.invokeLater(() -> {
+            new Main(null);       // 테스트 실행 (Member 없음)
+        });
     }
 
     /**

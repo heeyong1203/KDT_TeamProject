@@ -117,12 +117,6 @@ public class ProductManagementPage extends BaseContentPage {
 		initProduct();
 	}
 
-	public void refresh() {
-		this.infoPanel.init();
-		initTableColumnFieldComboBox();
-		initProduct();
-	}
-
 	private void initTableColumnFieldComboBox() {
 		this.tablePanel.setTableColumnFieldComboBox(new ArrayList<String>(columns.keySet()));
 	}

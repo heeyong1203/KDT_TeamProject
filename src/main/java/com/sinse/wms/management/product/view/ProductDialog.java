@@ -148,7 +148,6 @@ public class ProductDialog extends JDialog {
 						if (mimeType != null && mimeType.startsWith("image/")) {
 							changedImage = true;
 							iv_productImage.setSource(file);
-							String base = ImageUtil.encodeImageToBase64(iv_productImage);
 						} else {
 							JOptionPane.showMessageDialog(ProductDialog.this, "지원되지 않는 형식의 파일입니다.");
 						}
@@ -486,7 +485,7 @@ public class ProductDialog extends JDialog {
 
 				Image image = new Image();
 				image.setImage_data(encodeStringData);
-				image.setImage_data(ext);
+				image.setExt(ext);
 				pkKey = imageDAO.insert(image);
 			}
 

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.sinse.wms.common.exception.ProductDeleteException;
+import com.sinse.wms.common.exception.ProductInsertException;
 import com.sinse.wms.common.exception.ProductSelectException;
 import com.sinse.wms.common.exception.ProductUpdateException;
 import com.sinse.wms.common.util.DBManager;
@@ -19,7 +20,7 @@ import com.sinse.wms.product.model.ProductUnit;
 
 public class ProductDAO {
 	DBManager dbManager = DBManager.getInstance();
-
+	
 	// 품목명으로 품목 조회
 	public Product findByName(String name) {
 		Product product = null;
@@ -34,7 +35,6 @@ public class ProductDAO {
 		
 		Connection con = dbManager.getConnetion();
 		try {
-			pstmt = con.prepareStatement(sql.toString());
 			pstmt = con.prepareStatement(sql.toString());
 			pstmt.setString(1, name);
 			rs = pstmt.executeQuery();
@@ -59,12 +59,13 @@ public class ProductDAO {
 			dbManager.release(pstmt, rs);
 		}
 		return product;
-	}
-
+	}  
+	
+	
 	// 품목명 조회
 	public List<String> selectProductNames() {
-		List<String> names = new ArrayList<>();
-		String sql = "SELECT DISTINCT product_name FROM product";
+	    List<String> names = new ArrayList<>();
+	    String sql = "SELECT DISTINCT product_name FROM product";
 
 		Connection con = dbManager.getConnetion();
 		try (PreparedStatement pstmt = con.prepareStatement(sql); ResultSet rs = pstmt.executeQuery()) {
@@ -108,7 +109,7 @@ public class ProductDAO {
 		try {
 			StringBuffer sql = new StringBuffer();
 			sql.append(
-					"SELECT p.product_id, p.product_code, p.product_name, p.product_description, p.product_price, p.product_stock, p.product_regdate, p.image_id, ca.category_id, ca.category_name, c.company_id, c.company_name , pu.unit_id, pu.unit_name, l.location_id , l.location_name FROM product p INNER JOIN category ca ON p.category_id = ca.category_id INNER JOIN location l ON p.location_id = l.location_id INNER JOIN product_unit pu ON p.unit_id = pu.unit_id LEFT JOIN company c ON p.company_id = c.company_id");
+					"SELECT p.product_id, p.product_code, p.product_name, p.product_description, p.product_price, p.product_stock, p.product_regdate, p.image_id, ca.category_id, ca.category_name, c.company_id, c.company_name , pu.unit_id, pu.unit_name, l.location_id , l.location_name FROM product p INNER JOIN category ca ON p.category_id = ca.category_id INNER JOIN location l ON p.location_id = l.location_id INNER JOIN product_unit pu ON p.unit_id = pu.unit_id LEFT JOIN company c ON p.company_id = c.company_id ORDER BY p.product_id ASC");
 			pstmt = con.prepareStatement(sql.toString());
 			rs = pstmt.executeQuery();
 
@@ -169,7 +170,7 @@ public class ProductDAO {
 					"SELECT p.product_id, p.product_code, p.product_name, p.product_description, p.product_price, p.product_stock, p.product_regdate, p.image_id, ca.category_id, ca.category_name, c.company_id, c.company_name , pu.unit_id, pu.unit_name, l.location_id , l.location_name FROM product p INNER JOIN category ca ON p.category_id = ca.category_id INNER JOIN location l ON p.location_id = l.location_id INNER JOIN product_unit pu ON p.unit_id = pu.unit_id LEFT JOIN company c ON p.company_id = c.company_id");
 			sql.append(" WHERE ");
 			sql.append(columnName);
-			sql.append(" LIKE ?");
+			sql.append(" LIKE ? ORDER BY p.product_id ASC");
 			pstmt = con.prepareStatement(sql.toString());
 			pstmt.setString(1, input + "%");
 			rs = pstmt.executeQuery();
@@ -179,7 +180,6 @@ public class ProductDAO {
 				p.setProduct_id(rs.getInt("product_id"));
 				p.setProduct_code(rs.getString("product_code"));
 				p.setProduct_name(rs.getString("product_name"));
-				p.setProduct_description(rs.getString("product_description"));
 				p.setProduct_description(rs.getString("product_description"));
 				p.setProduct_price(rs.getInt("product_price"));
 				p.setProduct_stock(rs.getInt("product_stock"));
@@ -218,7 +218,7 @@ public class ProductDAO {
 	}
 
 	// 상품 추가
-	public void insert(Product p) {
+	public void insert(Product p) throws ProductInsertException {
 		Connection con = null;
 		PreparedStatement pstmt = null;
 

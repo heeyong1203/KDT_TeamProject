@@ -17,6 +17,7 @@ package com.sinse.wms.common.view.sidemenu;
  * 	<li>REPORT - 보고서</li>
  * 	<li>USER_MANAGEMENT- 사용자 관리</li>
  * 	<li>PRODUCT_MANAGEMENT - 상품 관리</li>
+ *  <li>CATEGORY_COMPANY_UNIT_LOCATION_MANAGEMENT - 카테고리, 거래처, 단위, 창고위치 관리</li>
  * 	<li>MY_PAGE - 마이페이지 (사용자) </li>
  * </ul>
  */
@@ -33,6 +34,7 @@ public enum Menu {
 	REPORT,
 	USER_MANAGEMENT,
 	PRODUCT_MANAGEMENT,
+	CATEGORY_COMPANY_UNIT_LOCATION_MANAGEMENT,
 	ADD_REQUEST,
 	MY_PAGE,
 	HELP,

@@ -24,7 +24,7 @@ public class JobGradeDAO {
 
 		try {
 			StringBuffer sql = new StringBuffer();
-			sql.append("SELECT * FROM job_grade");
+			sql.append("SELECT job_grade_id, job_grade_name FROM job_grade ORDER BY job_grade_id ASC");
 			pstmt = con.prepareStatement(sql.toString());
 			rs = pstmt.executeQuery();
 
