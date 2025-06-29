@@ -154,7 +154,6 @@ public class MemberInfoDialog extends JDialog {
 		p_wrapper.add(tf_hire_day);
 		p_wrapper.add(bt_submit);
 		add(p_wrapper);
-		initView();
 	}
 
 	public void initView() {
@@ -250,13 +249,16 @@ public class MemberInfoDialog extends JDialog {
 		Auth auth = getSelectedAuth();
 		JobGrade jobGrade = getSelectedJobGrade();
 
-		Member updateMember = this.member;
+		Member updateMember = new Member();
+		updateMember.setMember_id(this.member.getMember_id());
 		updateMember.setMember_name(name);
 		updateMember.setMember_email(email);
+		updateMember.setMemberhiredate(this.member.getMemberhiredate());
 		updateMember.setMember_password(password);
 		updateMember.setDept(dept);
 		updateMember.setAuth(auth);
 		updateMember.setJobGrade(jobGrade);
+		updateMember.setDormant(this.member.isDormant());
 
 		try {
 			this.memberDAO.update(updateMember);

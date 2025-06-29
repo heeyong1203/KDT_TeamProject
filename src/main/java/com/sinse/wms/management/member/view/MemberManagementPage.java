@@ -14,12 +14,8 @@ import com.sinse.wms.product.repository.JobGradeDAO;
 import com.sinse.wms.product.repository.MemberDAO;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -94,6 +90,7 @@ public class MemberManagementPage extends BaseContentPage implements MemberInfoD
 			MemberInfoDialog memberInfoDialog =  new MemberInfoDialog(JOptionPane.getFrameForComponent(this), this);
 			setDialogComboBoxData(memberInfoDialog);
 			memberInfoDialog.setMember(null);
+			memberInfoDialog.initView();
 			memberInfoDialog.setVisible(true);
 		});
 		this.obt_modify_user.setEnabled(false);
@@ -101,6 +98,7 @@ public class MemberManagementPage extends BaseContentPage implements MemberInfoD
 			MemberInfoDialog memberInfoDialog =  new MemberInfoDialog(JOptionPane.getFrameForComponent(this), this);
 			setDialogComboBoxData(memberInfoDialog);
 			memberInfoDialog.setMember(selectedMember);
+			memberInfoDialog.initView();
 			memberInfoDialog.setVisible(true);
 		});
 		this.obt_delete_user.setEnabled(false);
@@ -119,7 +117,7 @@ public class MemberManagementPage extends BaseContentPage implements MemberInfoD
 				}
 			}
 		});
-		this.obt_search_user.setEnabled(false);
+		this.obt_search_user.setEnabled(true);
 		this.obt_search_user.addActionListener(e -> {
 			findUsers();
 		});
@@ -136,24 +134,6 @@ public class MemberManagementPage extends BaseContentPage implements MemberInfoD
 			}
 		};
 		this.tf_search_user.setMaximumSize(new Dimension(300, 30));
-		this.tf_search_user.getDocument().addDocumentListener(new DocumentListener() {
-
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				updateSearchButton();
-			}
-
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				updateSearchButton();
-			}
-
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				updateSearchButton();
-			}
-		});
-
 		this.tb_member = new JTable();
 		this.tb_member.setModel(new MemberManagementTableModel(Arrays.asList()));
 		this.tb_member.setAutoCreateRowSorter(true);
@@ -210,14 +190,6 @@ public class MemberManagementPage extends BaseContentPage implements MemberInfoD
 		getData();
 	}
 
-	/**
-	 * 검색 텍스트필드에 글자가 입력되었는지 확인하여 검색버튼 활/비활성화 처리
-	 */
-	private void updateSearchButton() {
-		boolean enable = !this.tf_search_user.getText().isEmpty();
-		this.obt_search_user.setEnabled(enable);
-	}
-
 	private void updateUi() {
 		if (selectedMember != null) {
 			this.obt_modify_user.setEnabled(true);
@@ -266,7 +238,8 @@ public class MemberManagementPage extends BaseContentPage implements MemberInfoD
 		this.tb_member.getColumnModel().getColumn(3).setCellRenderer(rightRender);
 		this.tb_member.getColumnModel().getColumn(4).setCellRenderer(rightRender);
 		this.tb_member.getColumnModel().getColumn(5).setCellRenderer(centerRender);
-		this.tb_member.updateUI();
+		this.tb_member.revalidate();
+		this.tb_member.repaint();
 	}
 
 	private void initUsersStatus() {

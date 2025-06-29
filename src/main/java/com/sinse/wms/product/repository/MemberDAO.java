@@ -133,7 +133,7 @@ public class MemberDAO {
 		con = dbManager.getConnetion();
 
 		try {
-			String sql = "SELECT m.member_id, m.member_password, m.member_email, m.member_name, m.member_hiredate, m.dormant, d.dept_id, d.dept_name, a.auth_id, a.auth_name, a.auth_flag, j.job_grade_id, j.job_grade_name FROM member m INNER JOIN dept d ON m.dept_id=d.dept_id INNER JOIN auth a ON m.auth_id=a.auth_id INNER JOIN job_grade j ON m.job_grade_id=j.job_grade_id";
+			String sql = "SELECT m.member_id, m.member_password, m.member_email, m.member_name, m.member_hiredate, m.dormant, d.dept_id, d.dept_name, a.auth_id, a.auth_name, a.auth_flag, j.job_grade_id, j.job_grade_name FROM member m INNER JOIN dept d ON m.dept_id=d.dept_id INNER JOIN auth a ON m.auth_id=a.auth_id INNER JOIN job_grade j ON m.job_grade_id=j.job_grade_id ORDER BY member_id ASC";
 			pstmt = con.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 
@@ -260,7 +260,7 @@ public class MemberDAO {
 		try {
 			StringBuffer sql = new StringBuffer();
 			sql.append(
-					"UPDATE member SET member_email = ?, member_name = ?, memberhiredate = ?, dept_id = ?, auth_id = ? ");
+					"UPDATE member SET member_email = ?, member_name = ?, dept_id = ?, auth_id = ?, job_grade_id = ? ");
 			if (m.getMember_password().length() != 0) {
 				sql.append(", member_password = ? ");
 			}
@@ -269,9 +269,9 @@ public class MemberDAO {
 			pstmt = con.prepareStatement(sql.toString());
 			pstmt.setString(1, m.getMember_email());
 			pstmt.setString(2, m.getMember_name());
-			pstmt.setDate(3, m.getMemberhiredate());
-			pstmt.setInt(4, m.getDept().getDept_id());
-			pstmt.setInt(5, m.getAuth().getAuth_id());
+			pstmt.setInt(3, m.getDept().getDept_id());
+			pstmt.setInt(4, m.getAuth().getAuth_id());
+			pstmt.setInt(5, m.getJobGrade().getJobGradeId());
 			if (m.getMember_password().length() != 0) {
 				pstmt.setString(6, m.getMember_password());
 				pstmt.setInt(7, m.getMember_id());

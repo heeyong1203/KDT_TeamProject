@@ -35,14 +35,16 @@ public class MemberManagementTableModel extends AbstractTableModel {
 			return "부서";
 		case 4: 
 			return "직급";
-		default:
+		case 5:
 			return "휴면상태";
+		default:
+			return "입사일";
 		}
 	}
 
 	@Override
 	public int getColumnCount() {
-		return 6;
+		return 7;
 	}
 
 	@Override
@@ -63,12 +65,14 @@ public class MemberManagementTableModel extends AbstractTableModel {
 			return member.getDept().getDept_name();
 		case 4:
 			return member.getJobGrade().getJobGradeName();
-		default:
+		case 5 :
 			if (member.isDormant()) {
 				return "O";
 			} else {
 				return "X";
 			}
+		default:
+			return member.getMemberhiredate().toString();
 		}
 	}
 
