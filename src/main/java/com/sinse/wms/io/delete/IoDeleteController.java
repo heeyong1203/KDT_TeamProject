@@ -1,7 +1,6 @@
 package com.sinse.wms.io.delete;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -11,7 +10,6 @@ import com.sinse.wms.common.util.DBManager;
 import com.sinse.wms.io.view.IoFilterPanel;
 import com.sinse.wms.io.view.IoTableModel;
 import com.sinse.wms.product.model.IoRequest;
-import com.sinse.wms.product.model.ProductSnapshot;
 import com.sinse.wms.product.repository.IoRequestDAO;
 import com.sinse.wms.product.repository.ProductSnapshotDAO;
 
@@ -47,8 +45,8 @@ public class IoDeleteController {
 			
 			for (IoRequest io : selectedList) {
 				int selectedPk = io.getIoRequest_id(); // 체크한 레코드의 pk값 얻어오기
-					dao.delete(selectedPk, con); // 선택한 레코드의 pk값을 이용하여 삭제 실행
 					snapDAO.delete(selectedPk, con); // io_request_id == product_snapshot_id
+					dao.delete(selectedPk, con); // 선택한 레코드의 pk값을 이용하여 삭제 실행
 			}
 			con.commit();
 			model.clearSelections(); // 체크박스 원상복구

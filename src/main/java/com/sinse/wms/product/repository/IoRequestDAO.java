@@ -4,12 +4,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.sinse.wms.common.util.ChangeFormToDate;
 import com.sinse.wms.common.util.ChangeFormToDate;
 import com.sinse.wms.common.util.DBManager;
 import com.sinse.wms.product.model.Company;
@@ -240,12 +240,13 @@ public class IoRequestDAO {
     // 입출고 요청 등록
     public void insert(IoRequest io, Connection con) {
         PreparedStatement pstmt = null;
+        ResultSet rs = null;
 
         try {
             String sql = "INSERT INTO io_request (io_request_type, product_id, quantity, location_id, request_member_id, request_reason, status_id, request_at, expected_date, approve_member_id, approved_at, remark) "
                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-            pstmt = con.prepareStatement(sql);
+            pstmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, io.getIoRequest_type());
             pstmt.setInt(2, io.getProduct().getProduct_id());
             pstmt.setInt(3, io.getQuantity());
@@ -259,7 +260,15 @@ public class IoRequestDAO {
             pstmt.setDate(11, io.getApproved_at());
             pstmt.setString(12, io.getRemark());
 
-            pstmt.executeUpdate();
+            int result = pstmt.executeUpdate();
+
+            if (result > 0) {
+                rs = pstmt.getGeneratedKeys();
+                if (rs.next()) {
+                    int generatedId = rs.getInt(1);  // 생성된 io_request_id
+                    io.setIoRequest_id(generatedId);  // 여기서 객체에 반영
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -399,9 +408,9 @@ public class IoRequestDAO {
 	            if (filters.get(4) != null && !filters.get(4).isEmpty()) {
 	                sql.append(" AND p.product_name = ?");
 	            }
-//	            if (filters.get(5) != null && !filters.get(5).isEmpty()) {
-//	                sql.append(" AND rs.status_name = ?");
-//	            }
+	            if (filters.get(5) != null && !filters.get(5).isEmpty()) {
+	                sql.append(" AND rs.status_name = ?");
+	            }
         	}
             
             pstmt = con.prepareStatement(sql.toString());

@@ -57,17 +57,24 @@ public class IoTableCellFormatters {
             @Override
             protected void setValue(Object value) {
                 setHorizontalAlignment(SwingConstants.RIGHT);
+
                 if (value instanceof Number) {
-                    Number num = (Number) value;
-                    if (num.doubleValue() == 0.0) {
-                        super.setValue("- ");
-                    } else {
-                        super.setValue(nf.format(num) + "원");
+                    double val = ((Number) value).doubleValue();
+                    super.setValue(val == 0.0 ? "- " : nf.format(val) + "원");
+
+                } else if (value instanceof String) {
+                    String str = ((String) value).replaceAll("[^\\d.,-]", "");  // '숫자', '소수점', '단위콤마', 0을 의미하는 '-'만 남기기
+                    try {
+                        double parsed = Double.parseDouble(str);
+                        super.setValue(parsed == 0.0 ? "- " : nf.format(parsed) + "원");
+                    } catch (NumberFormatException e) {
+                        super.setValue(value.toString());  // 숫자 변환 실패 시 원문 그대로
                     }
+
                 } else if (value == null) {
                     super.setValue("- ");
+
                 } else {
-                    // 예외적으로 숫자 아닌데 뭔가 표시할 값이 온 경우
                     super.setValue(value.toString());
                 }
             }
